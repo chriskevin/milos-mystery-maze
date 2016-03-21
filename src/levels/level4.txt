@@ -1,0 +1,17 @@
+t2|w2|w2|w2|w2|w2|w2|w2|w2|w2|w2|w2|w2|w2|w2|w2|w2|w2|w2|t2
+t2|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|t2
+t2|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|e1|f1|t2
+t2|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|t2
+t2|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|t2
+t2|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|t2
+t2|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|t2
+t2|f1|f1|f1|f1|f1|f1|f1|f1|h1|f1|f1|f1|f1|f1|f1|f1|f1|f1|t2
+t2|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|t2
+t2|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|t2
+t2|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|t2
+t2|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|t2
+t2|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|t2
+t2|t2|t2|t2|t2|t2|t2|t2|t2|t2|t2|t2|t2|t2|t2|t2|t2|t2|t2|t2
+
+LEVEL 04
+========
