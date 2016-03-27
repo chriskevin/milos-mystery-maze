@@ -1,175 +1,89 @@
 package se.chriskevin.mysterymaze;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Created by CHSU7648 on 2016-03-14.
  */
 final public class Camera {
-    /*
-     * speed       The speed which the camera moves at.
-     * targetLastX The targets latest x position.
-     * targetLastY The targets latest y position.
-     * target      The specified object to follow.
-     * board       A reference to the board object.
-     * viewArea    The area which corresponds to the levels size.
-     * POV         The area which the board is visible within.
-     */
-    private double speed;
-    private int targetLastX = 0;
-    private int targetLastY = 0;
+
+    private Collection<Sprite> sprites;
 
     private Sprite target;
-    private Board board;
+
     private Rectangle viewArea;
-    private Rectangle POV;
 
-    /**
-     * The constructor method which requires a reference to a board object.
-     * @param board Reference to the board.
-     */
-    public Camera(Board board) {
-        this.board = board;
-
-        //speed = (board.tileDimension.getWidth() / 4);
-        //viewArea = new Rectangle(new Point(0, 0), board.mapDimension);
-        //POV = new Rectangle(new Point(0, 0), new Dimension(800, 600));
+    public Camera(Dimension dimension, Collection<Sprite> sprites, Sprite target) {
+        this.viewArea = new Rectangle(new Point(0, 0), dimension);
+        this.sprites = sprites;
+        this.target = target;
     }
 
-    /**
-     * This method locks the camera to the assigned target.
-     */
-    public void follow() {
+    public void update(Board board, Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+
         Rectangle targetBounds = target.getBounds();
-        int targetX = ( (POV.width / 2) - ((int)targetBounds.getWidth() / 2) );
-        int targetY = ( (POV.height / 2) - ((int)targetBounds.getHeight() / 2) );
-        int relativeX = (targetX - target.getX() );
-        int relativeY = (targetY - target.getY() );
 
-        int leftBound = targetX;
-        int rightBound = ( (viewArea.width - (POV.width / 2) ) );
-        int topBound = targetY;
-        int bottomBound = ( (viewArea.height - (POV.height / 2) ) );
+        int targetX = ((int) viewArea.getWidth() / 2) - ((int) targetBounds.getWidth() / 2);
+        int targetY = ((int) viewArea.getHeight() / 2) - ((int) targetBounds.getHeight() / 2);
 
-        resetObjectPositions();
+        targetX = adjustXBoundary(targetX);
+        targetY = adjustYBoundary(targetY);
 
-        // Center targets X if it is between bounds
-        if (target.getX() >= leftBound && target.getX() <= rightBound) {
+        int offsetX = (targetX - target.getX());
+        int offsetY = (targetY - target.getY());
 
-            if (target.getX() != targetLastX)
-                targetLastX = target.getX();
+        int newViewAreaX = target.getX() - ((int) viewArea.getX() / 2) - (int) targetBounds.getWidth();
+        int newViewAreaY = target.getY() - ((int) viewArea.getY() / 2) - (int) targetBounds.getHeight();
+        this.viewArea.setLocation(newViewAreaX, newViewAreaY);
 
-            setObjectPositions(relativeX, 0);
-            target.setX(targetX);
+        for (Sprite sprite : sprites) {
+            if (!sprite.equals(target)) {
+                sprite.isVisible(sprite.getBounds().intersects(viewArea));
+            }
 
-        } else if (target.getX() > rightBound) {
-            setObjectPositions(-( (viewArea.width - POV.width) + 64 ), 0);
-            target.setX( (targetX + (target.getX() - rightBound ) ) );
+            if (sprite.isVisible()) {
+                if (sprite instanceof Character && ((Character) sprite).isColliding()) {
+                    drawCollisionZone(g, new Rectangle(new Point((int) sprite.getBounds().getX() + offsetX, (int) sprite.getBounds().getY() + offsetY), sprite.getBounds().getSize()));
+                }
+                g2d.drawImage(sprite.getImage(), sprite.getX() + offsetX, sprite.getY() + offsetY, board);
+            }
         }
 
-        // Center targets Y if it is between bounds
-        if (target.getY() >= topBound && target.getY() <= bottomBound) {
-
-            if (target.getY() != targetLastY)
-                targetLastY = target.getY();
-
-            setObjectPositions(0, relativeY);
-            target.setY(targetY);
-
-        } else if (target.getY() > bottomBound) {
-            setObjectPositions(0, -( (viewArea.height - POV.height) + 64 ) );
-            target.setY( (targetY + (target.getY() - bottomBound ) ) );
+        if (((Character) target).isColliding()) {
+            drawCollisionZone(g, new Rectangle(new Point((int) target.getBounds().getX() + offsetX, (int) target.getBounds().getY() + offsetY), target.getBounds().getSize()));
         }
-
-        updatePOV();
+        g2d.drawImage(target.getImage(), targetX, targetY, board);
     }
 
-    /**
-     * This method sets all non moving objects coordinates back
-     * to their initial positions.
-     */
-    private void resetObjectPositions() {
-//        int tileSize = board.getTiles().get(0).getWidth();
-//        int currentX = 0;
-//        int currentY = 0;
-//        int n = 0;
-//
-//        while (currentY <= viewArea.height) {
-//            while (currentX <= viewArea.width) {
-//                board.getTiles().get(n).setX(currentX);
-//                board.getTiles().get(n).setY(currentY);
-//                currentX += tileSize;
-//                n++;
-//            }
-//            currentX = 0;
-//            currentY += tileSize;
-//        }
+    private int adjustXBoundary(int x) {
+        if (target.getX() <= viewArea.getWidth() / 2) {
+            return target.getX();
+        } else {
+            return x;
+        }
     }
 
-    /**
-     * This method changes all GameObject objects positions
-     * relative to the POV.
-     * @param x
-     * @param y
-     */
-    public void setObjectPositions(int x, int y) {
+    private int adjustYBoundary(int y) {
+        if (target.getY() <= viewArea.getHeight() / 2) {
+            return target.getY();
+        } else {
+            return y;
+        }
+    }
 
-//        // Update tiles
-//        for (int i = 0; i < board.getTiles().size(); i++) {
-//            Sprite tempTile = board.getTiles().get(i);
-//            tempTile.setX( (tempTile.getX() + x) );
-//            tempTile.setY( (tempTile.getY() + y) );
-//        }
-//
-//        // Update players
-//        for (int i = 0; i < board.players.size(); i++) {
-//            MutantPC tempPlayer = board.players.get(i);
-//            int targetIndex = board.players.indexOf(target);
-//            if (i != targetIndex) {
-//                tempPlayer.setX( (tempPlayer.getX() + x) );
-//                tempPlayer.setY( (tempPlayer.getY() + y) );
-//            }
-//        }
-//
-//        // Update npcs
-//        for (int i = 0; i < board.npcs.size(); i++) {
-//            NPC tempNPC = (NPC) board.npcs.get(i);
-//            tempNPC.setX( (tempNPC.getX() + x) );
-//            tempNPC.setY( (tempNPC.getY() + y));
-//        }
-//
-//        // Update items
-//        for (int i = 0; i < board.items.size(); i++) {
-//            Item tempItem = board.items.get(i);
-//            tempItem.setX( (tempItem.getX() + x) );
-//            tempItem.setY( (tempItem.getY() + y) );
-//        }
+    private void drawCollisionZone(Graphics g, Rectangle bounds) {
+        Color myColour = new Color(255, 0, 0, 128);
+        g.setColor(myColour);
+        g.fillRect((int) bounds.getX(), (int) bounds.getY(), (int) bounds.getWidth(), (int) bounds.getHeight());
     }
 
     /**
      * This method sets the target to follow.
-     * @param sprite
+     * @param target
      */
-    public void setTarget(Sprite sprite) {
-        target = sprite;
-    }
-
-    /**
-     * This method check which tiles are inside the POV
-     * and adds references to them in the Level objects
-     * tempTiles list.
-     */
-    private void updatePOV() {
-        //board.tempTiles = new ArrayList();
-
-        // Find the start index
-        for (int i = 0; i < board.getTiles().size(); i++) {
-            //Sprite tempTile = board.getTiles().get(i);
-            //Rectangle tileBounds = tempTile.getBounds();
-
-            //if (tileBounds.intersects(POV))
-            //    board.tempTiles.add(tempTile);
-        }
+    public void setTarget(Sprite target) {
+        this.target = target;
     }
 }

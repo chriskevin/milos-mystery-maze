@@ -15,8 +15,6 @@ public class Game extends JFrame {
     }
 
     private void initUI() {
-        setContentPane(new Board());
-
         setTitle("Milo's Mystery Maze");
         setResizable(true);
         setSize(1024, 768);
@@ -26,6 +24,7 @@ public class Game extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         hideCursor();
+        setContentPane(new Board(this.getSize()));
     }
 
     private void hideCursor() {

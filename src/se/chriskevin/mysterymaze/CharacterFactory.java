@@ -10,8 +10,9 @@ import java.util.HashMap;
  */
 public class CharacterFactory {
 
-    public static Character createHero(int x, int y) {
+    public static Character createHero(int x, int y, int scale) {
         final Character hero = new Character(x, y);
+        hero.setScale(scale);
         final Map<String, String> imageMap = new HashMap<>();
         imageMap.put("STOPPED_DOWN", "/images/milo/STOPPED_DOWN.gif");
         imageMap.put("STOPPED_LEFT", "/images/milo/STOPPED_LEFT.gif");
@@ -25,8 +26,9 @@ public class CharacterFactory {
         return hero;
     }
 
-    public static Character createBat(int x, int y) {
+    public static Character createBat(int x, int y, int scale) {
         final Character bat = new Character(x, y);
+        bat.setScale(scale);
         bat.setAnimationState(AnimationState.WALKING);
         final Map<String, String> imageMap = new HashMap<>();
         imageMap.put("STOPPED_DOWN", "/images/bat/WALKING_DOWN.gif");
@@ -42,8 +44,9 @@ public class CharacterFactory {
         return bat;
     }
 
-    public static Character createRat(int x, int y) {
-        final Character hero = new Character(x, y);
+    public static Character createRat(int x, int y, int scale) {
+        final Character rat = new Character(x, y);
+        rat.setScale(scale);
         final Map<String, String> imageMap = new HashMap<>();
         imageMap.put("STOPPED_DOWN", "/images/rat/STOPPED_LEFT.gif");
         imageMap.put("STOPPED_LEFT", "/images/rat/STOPPED_LEFT.gif");
@@ -53,16 +56,17 @@ public class CharacterFactory {
         imageMap.put("WALKING_LEFT", "/images/rat/WALKING_LEFT.gif");
         imageMap.put("WALKING_RIGHT", "/images/rat/WALKING_RIGHT.gif");
         imageMap.put("WALKING_UP", "/images/rat/WALKING_RIGHT.gif");
-        hero.setImages(imageMap);
-        return hero;
+        rat.setImages(imageMap);
+        return rat;
     }
 
-    public static Character createZombie(int x, int y) {
-        final Character hero = new Character(x, y);
+    public static Character createZombie(int x, int y, int scale) {
+        final Character zombie = new Character(x, y);
+        zombie.setScale(scale);
         final Map<String, String> imageMap = new HashMap<>();
         imageMap.put("STOPPED_DOWN", "/images/zombie/STOPPED_DOWN.gif");
         imageMap.put("STOPPED_UP", "/images/zombie/STOPPED_UP.gif");
-        hero.setImages(imageMap);
-        return hero;
+        zombie.setImages(imageMap);
+        return zombie;
     }
 }

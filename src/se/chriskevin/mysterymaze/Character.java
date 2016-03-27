@@ -73,25 +73,25 @@ public class Character extends Sprite implements Actor {
         }
 
         if (key == KeyEvent.VK_LEFT) {
-            dx = -speed;
+            dx = -speed * scale;
             direction = Direction.LEFT;
             animationState = AnimationState.WALKING;
         }
 
         if (key == KeyEvent.VK_RIGHT) {
-            dx = speed;
+            dx = speed * scale;
             direction = Direction.RIGHT;
             animationState = AnimationState.WALKING;
         }
 
         if (key == KeyEvent.VK_UP) {
-            dy = -speed;
+            dy = -speed * scale;
             direction = Direction.UP;
             animationState = AnimationState.WALKING;
         }
 
         if (key == KeyEvent.VK_DOWN) {
-            dy = speed;
+            dy = speed * scale;
             direction = Direction.DOWN;
             animationState = AnimationState.WALKING;
         }

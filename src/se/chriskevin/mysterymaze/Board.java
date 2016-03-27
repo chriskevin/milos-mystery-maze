@@ -13,12 +13,15 @@ import javax.swing.Timer;
 
 public class Board extends JPanel implements ActionListener {
 
-    private final int B_WIDTH = 350;
-    private final int B_HEIGHT = 350;
+    private Dimension dimension;
+
+    private int zoomFactor = 2;
+
     private final int DELAY = 25;
 
     private boolean paused;
 
+    private Camera camera;
     private Timer timer;
     private Character hero;
     private Collection<Character> enemies;
@@ -28,7 +31,8 @@ public class Board extends JPanel implements ActionListener {
 
     private CLI cli;
 
-    public Board() {
+    public Board(Dimension dimension) {
+        this.dimension = dimension;
         initBoard();
     }
 
@@ -36,7 +40,7 @@ public class Board extends JPanel implements ActionListener {
         addKeyListener(new TAdapter());
         setFocusable(true);
         setBackground(Color.BLACK);
-        setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
+        setPreferredSize(dimension);
         setDoubleBuffered(true);
 
         cli = new CLI();
@@ -46,6 +50,13 @@ public class Board extends JPanel implements ActionListener {
         generator = new BoardGenerator();
         final Collection<String> mapData = generator.parseLevelFile("/levels/level1.txt");
         createLevel(mapData);
+
+        Collection<Sprite> sprites = new ArrayList<>();
+        sprites.add(hero);
+        sprites.addAll(tiles);
+        sprites.addAll(enemies);
+
+        camera = new Camera(dimension, sprites, hero);
 
         timer = new Timer(DELAY, this);
         timer.start();
@@ -58,30 +69,13 @@ public class Board extends JPanel implements ActionListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        camera.update(this, g);
         doDrawing(g);
         Toolkit.getDefaultToolkit().sync();
     }
 
     private void doDrawing(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-
-        for (Sprite tile : tiles) {
-            g2d.drawImage(tile.getImage(), tile.getX(), tile.getY(), this);
-        }
-
-        if (hero.isColliding()) {
-            drawCollisionZone(g, hero.getBounds());
-        }
-        g2d.drawImage(hero.getImage(), hero.getX(), hero.getY(), this);
-
-        for (Character enemy : enemies) {
-            if (enemy.isColliding()) {
-                drawCollisionZone(g, enemy.getBounds());
-            }
-            if (enemy.isVisible()) {
-                g2d.drawImage(enemy.getImage(), enemy.getX(), enemy.getY(), this);
-            }
-        }
 
         Color myColour = new Color(0, 0, 0, 128);
         g.setColor(myColour);
@@ -96,12 +90,6 @@ public class Board extends JPanel implements ActionListener {
         g.drawString(ingameMsg + levelMsg + enemyMsg + coordsMsg, 32, 32);
         drawCli(g);
         g.dispose();
-    }
-
-    private void drawCollisionZone(Graphics g, Rectangle bounds) {
-        Color myColour = new Color(255, 0, 0, 128);
-        g.setColor(myColour);
-        g.fillRect((int) bounds.getX(), (int) bounds.getY(), (int) bounds.getWidth(), (int) bounds.getHeight());
     }
 
     private void drawCli(Graphics g) {
@@ -245,7 +233,7 @@ public class Board extends JPanel implements ActionListener {
                         break;
                     case 'h':
                         createTile(currX, currY, "/images/tiles/f1.gif", false);
-                        hero = CharacterFactory.createHero(currX, currY - 14);
+                        hero = CharacterFactory.createHero(currX, currY - 14, zoomFactor);
                         break;
                     case 'm':
                         createTile(currX, currY, "/images/tiles/f1.gif", false);
@@ -256,34 +244,35 @@ public class Board extends JPanel implements ActionListener {
                         createTile(currX, currY, "/images/tiles/" + type + typeId + ".gif", true);
                         break;
                     default:
-                        currX -= 32;
+                        currX -= 32 * zoomFactor;
                         break;
                 }
 
-                currX += 32;
+                currX += 32 * zoomFactor;
 
             }
             currX = 0;
-            currY += 32;
+            currY += 32 * zoomFactor;
         }
     }
 
     private void createEnemy(int enemyNo, int currX, int currY) {
         switch (enemyNo) {
             case 1:
-                enemies.add(CharacterFactory.createBat(currX, currY));
+                enemies.add(CharacterFactory.createBat(currX, currY, zoomFactor));
                 break;
             case 2:
-                enemies.add(CharacterFactory.createRat(currX, currY));
+                enemies.add(CharacterFactory.createRat(currX, currY, zoomFactor));
                 break;
             case 3:
-                enemies.add(CharacterFactory.createZombie(currX, currY - 14));
+                enemies.add(CharacterFactory.createZombie(currX, currY - (14 * zoomFactor), zoomFactor));
                 break;
         }
     }
 
     private void createTile(int x, int y, String imageFilename, boolean blocking) {
         final Sprite sprite = new Sprite(x, y);
+        sprite.setScale(zoomFactor);
         if (blocking) {
             sprite.isBlocking(blocking);
         }

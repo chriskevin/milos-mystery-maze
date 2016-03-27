@@ -1,7 +1,10 @@
 package se.chriskevin.mysterymaze;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +16,7 @@ public class Sprite {
     protected int y;
     protected int width;
     protected int height;
+    protected int scale;
     protected boolean visible;
     protected boolean blocking;
 
@@ -24,6 +28,7 @@ public class Sprite {
     public Sprite(int x, int y) {
         this.x = x;
         this.y = y;
+        this.scale = 1;
 
         blocking = false;
         visible = true;
@@ -62,8 +67,10 @@ public class Sprite {
 
     private Image loadImage(String imageName) {
         try {
-            ImageIcon ii = new ImageIcon(getClass().getResource(imageName));
-            return ii.getImage();
+            //ImageIcon ii = new ImageIcon(getClass().getResource(imageName));
+            BufferedImage originalImage = ImageIO.read(new File(getClass().getResource(imageName).toURI()));
+            return resize(this.scale, originalImage);
+            //return ii.getImage();
         } catch (Exception e) {
             throw new RuntimeException("Failed to load image: " + imageName);
         }
@@ -72,6 +79,10 @@ public class Sprite {
     public Image getImage() {
         final String key = animationState + "_" + direction;
         return (images != null && images.size() > 0) ? images.get(key) : image;
+    }
+
+    public Image resize(int factor, BufferedImage originalImage) {
+        return originalImage.getScaledInstance(factor * originalImage.getWidth(null), factor * originalImage.getHeight(null), BufferedImage.SCALE_SMOOTH);
     }
 
     public int getX() {
@@ -88,6 +99,10 @@ public class Sprite {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public void setScale(int factor) {
+        this.scale = factor;
     }
 
     public Direction getDirection() {
