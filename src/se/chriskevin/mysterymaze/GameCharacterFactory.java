@@ -2,16 +2,17 @@ package se.chriskevin.mysterymaze;
 
 import se.chriskevin.mysterymaze.behavior.MoveBehavior;
 
+import java.awt.*;
 import java.util.Map;
 import java.util.HashMap;
 
 /**
  * Created by CHSU7648 on 2016-03-08.
  */
-public class CharacterFactory {
+public class GameCharacterFactory {
 
-    public static Character createHero(int x, int y, int scale) {
-        final Character hero = new Character(x, y);
+    public static GameCharacter createHero(Point location, int scale) {
+        final GameCharacter hero = new GameCharacter(location);
         hero.setScale(scale);
         final Map<String, String> imageMap = new HashMap<>();
         imageMap.put("STOPPED_DOWN", "/images/milo/STOPPED_DOWN.gif");
@@ -26,8 +27,8 @@ public class CharacterFactory {
         return hero;
     }
 
-    public static Character createBat(int x, int y, int scale) {
-        final Character bat = new Character(x, y);
+    public static GameCharacter createBat(Point location, int scale) {
+        final GameCharacter bat = new GameCharacter(location);
         bat.setScale(scale);
         bat.setAnimationState(AnimationState.WALKING);
         final Map<String, String> imageMap = new HashMap<>();
@@ -44,8 +45,8 @@ public class CharacterFactory {
         return bat;
     }
 
-    public static Character createRat(int x, int y, int scale) {
-        final Character rat = new Character(x, y);
+    public static GameCharacter createRat(Point location, int scale) {
+        final GameCharacter rat = new GameCharacter(location);
         rat.setScale(scale);
         final Map<String, String> imageMap = new HashMap<>();
         imageMap.put("STOPPED_DOWN", "/images/rat/STOPPED_LEFT.gif");
@@ -60,8 +61,8 @@ public class CharacterFactory {
         return rat;
     }
 
-    public static Character createZombie(int x, int y, int scale) {
-        final Character zombie = new Character(x, y);
+    public static GameCharacter createZombie(Point location, int scale) {
+        final GameCharacter zombie = new GameCharacter(location);
         zombie.setScale(scale);
         final Map<String, String> imageMap = new HashMap<>();
         imageMap.put("STOPPED_DOWN", "/images/zombie/STOPPED_DOWN.gif");

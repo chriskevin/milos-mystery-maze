@@ -1,7 +1,6 @@
 package se.chriskevin.mysterymaze;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -11,11 +10,11 @@ import java.util.Map;
 /**
  * Created by CHSU7648 on 2016-03-12.
  */
-public class Sprite {
-    protected int x;
-    protected int y;
-    protected int width;
-    protected int height;
+public class GameSprite implements GameObject {
+
+    protected Point location;
+    protected Dimension size;
+
     protected int scale;
     protected boolean visible;
     protected boolean blocking;
@@ -25,9 +24,9 @@ public class Sprite {
     protected Image image;
     protected Map<String, Image> images;
 
-    public Sprite(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public GameSprite(Point location) {
+        this.location = location;
+        this.size = new Dimension(0, 0);
         this.scale = 1;
 
         blocking = false;
@@ -36,11 +35,25 @@ public class Sprite {
         direction = Direction.DOWN;
     }
 
-    protected void getImageDimensions() {
+    public Rectangle getBounds() {
+        return new Rectangle(location, size);
+    }
+
+    public Direction getDirection() {
+        return this.direction;
+    }
+
+    public Image getImage() {
         final String key = animationState + "_" + direction;
-        final Image img = (images != null && images.size() > 0) ? images.get(key) : image;
-        width = img.getWidth(null);
-        height = img.getHeight(null);
+        return (images != null && images.size() > 0) ? images.get(key) : image;
+    }
+
+    public Point getLocation() {
+        return this.location;
+    }
+
+    public Dimension getSize() {
+        return this.size;
     }
 
     public boolean isBlocking() {
@@ -49,6 +62,26 @@ public class Sprite {
 
     public void isBlocking(boolean blocking) {
         this.blocking = blocking;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void isVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public Image resize(int factor, BufferedImage originalImage) {
+        return originalImage.getScaledInstance(factor * originalImage.getWidth(null), factor * originalImage.getHeight(null), BufferedImage.SCALE_SMOOTH);
+    }
+
+    public void setAnimationState(AnimationState animationState) {
+        this.animationState = animationState;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 
     public void setImage(String imageFilename) {
@@ -76,56 +109,13 @@ public class Sprite {
         }
     }
 
-    public Image getImage() {
+    protected void getImageDimensions() {
         final String key = animationState + "_" + direction;
-        return (images != null && images.size() > 0) ? images.get(key) : image;
-    }
-
-    public Image resize(int factor, BufferedImage originalImage) {
-        return originalImage.getScaledInstance(factor * originalImage.getWidth(null), factor * originalImage.getHeight(null), BufferedImage.SCALE_SMOOTH);
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
+        final Image img = (images != null && images.size() > 0) ? images.get(key) : image;
+        size.setSize(img.getWidth(null), img.getHeight(null));
     }
 
     public void setScale(int factor) {
         this.scale = factor;
-    }
-
-    public Direction getDirection() {
-        return this.direction;
-    }
-
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void isVisible(boolean visible) {
-        this.visible = visible;
-    }
-
-    public Rectangle getBounds() {
-        return new Rectangle(x, y, width, height);
-    }
-
-    public void setAnimationState(AnimationState animationState) {
-        this.animationState = animationState;
     }
 }

@@ -8,73 +8,75 @@ import java.util.Collection;
  */
 final public class Camera {
 
-    private Collection<Sprite> sprites;
+    private Collection<GameSprite> gameSprites;
 
-    private Sprite target;
+    private GameSprite target;
 
     private Rectangle viewArea;
 
-    public Camera(Dimension dimension, Collection<Sprite> sprites, Sprite target) {
+    public Camera(Dimension dimension, Collection<GameSprite> gameSprites, GameSprite target) {
         this.viewArea = new Rectangle(new Point(0, 0), dimension);
-        this.sprites = sprites;
+        this.gameSprites = gameSprites;
         this.target = target;
     }
 
     public void update(Board board, Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
+        final Graphics2D g2d = (Graphics2D) g;
 
-        Rectangle targetBounds = target.getBounds();
+        final Rectangle targetBounds = target.getBounds();
 
-        int targetX = ((int) viewArea.getWidth() / 2) - ((int) targetBounds.getWidth() / 2);
-        int targetY = ((int) viewArea.getHeight() / 2) - ((int) targetBounds.getHeight() / 2);
+        double targetX = (viewArea.getWidth() / 2) - (targetBounds.getWidth() / 2);
+        double targetY = (viewArea.getHeight() / 2) - (targetBounds.getHeight() / 2);
 
         targetX = adjustXBoundary(targetX);
         targetY = adjustYBoundary(targetY);
 
-        int offsetX = (targetX - target.getX());
-        int offsetY = (targetY - target.getY());
+        double offsetX = (targetX - target.getLocation().getX());
+        double offsetY = (targetY - target.getLocation().getY());
 
-        int newViewAreaX = target.getX() - ((int) viewArea.getX() / 2) - (int) targetBounds.getWidth();
-        int newViewAreaY = target.getY() - ((int) viewArea.getY() / 2) - (int) targetBounds.getHeight();
-        this.viewArea.setLocation(newViewAreaX, newViewAreaY);
+        double newViewAreaX = target.getLocation().getX() - (viewArea.getX() / 2) - targetBounds.getWidth();
+        double newViewAreaY = target.getLocation().getY() - (viewArea.getY() / 2) - targetBounds.getHeight();
+        this.viewArea.setLocation((int) newViewAreaX, (int) newViewAreaY);
 
-        for (Sprite sprite : sprites) {
-            if (!sprite.equals(target)) {
-                sprite.isVisible(sprite.getBounds().intersects(viewArea));
+        gameSprites.forEach(gameSprite -> {
+            if (!gameSprite.equals(target)) {
+                gameSprite.isVisible(gameSprite.getBounds().intersects(viewArea));
             }
 
-            if (sprite.isVisible()) {
-                if (sprite instanceof Character && ((Character) sprite).isColliding()) {
-                    drawCollisionZone(g, new Rectangle(new Point((int) sprite.getBounds().getX() + offsetX, (int) sprite.getBounds().getY() + offsetY), sprite.getBounds().getSize()));
+            if (gameSprite.isVisible()) {
+                if (gameSprite instanceof GameCharacter && ((GameCharacter) gameSprite).isColliding()) {
+                    final Point collisionZoneLocation = new Point((int) gameSprite.getBounds().getX() + (int) offsetX, (int) gameSprite.getBounds().getY() + (int) offsetY);
+                    drawCollisionZone(g, new Rectangle(collisionZoneLocation, gameSprite.getBounds().getSize()));
                 }
-                g2d.drawImage(sprite.getImage(), sprite.getX() + offsetX, sprite.getY() + offsetY, board);
+                g2d.drawImage(gameSprite.getImage(), (int) gameSprite.getLocation().getX() + (int) offsetX, (int) gameSprite.getLocation().getY() + (int) offsetY, board);
             }
-        }
+        });
 
-        if (((Character) target).isColliding()) {
-            drawCollisionZone(g, new Rectangle(new Point((int) target.getBounds().getX() + offsetX, (int) target.getBounds().getY() + offsetY), target.getBounds().getSize()));
+        if (((GameCharacter) target).isColliding()) {
+            final Point collisionZoneLocation = new Point((int) target.getBounds().getX() + (int) offsetX, (int) target.getBounds().getY() + (int) offsetY);
+            drawCollisionZone(g, new Rectangle(collisionZoneLocation, target.getBounds().getSize()));
         }
-        g2d.drawImage(target.getImage(), targetX, targetY, board);
+        g2d.drawImage(target.getImage(), (int) targetX, (int) targetY, board);
     }
 
-    private int adjustXBoundary(int x) {
-        if (target.getX() <= viewArea.getWidth() / 2) {
-            return target.getX();
+    private double adjustXBoundary(double x) {
+        if (target.getLocation().getX() <= viewArea.getWidth() / 2) {
+            return target.getLocation().getX();
         } else {
             return x;
         }
     }
 
-    private int adjustYBoundary(int y) {
-        if (target.getY() <= viewArea.getHeight() / 2) {
-            return target.getY();
+    private double adjustYBoundary(double y) {
+        if (target.getLocation().getY() <= viewArea.getHeight() / 2) {
+            return target.getLocation().getY();
         } else {
             return y;
         }
     }
 
     private void drawCollisionZone(Graphics g, Rectangle bounds) {
-        Color myColour = new Color(255, 0, 0, 128);
+        final Color myColour = new Color(255, 0, 0, 128);
         g.setColor(myColour);
         g.fillRect((int) bounds.getX(), (int) bounds.getY(), (int) bounds.getWidth(), (int) bounds.getHeight());
     }
@@ -83,7 +85,7 @@ final public class Camera {
      * This method sets the target to follow.
      * @param target
      */
-    public void setTarget(Sprite target) {
+    public void setTarget(GameSprite target) {
         this.target = target;
     }
 }

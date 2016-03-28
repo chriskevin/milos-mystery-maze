@@ -40,12 +40,9 @@ public class Game extends JFrame {
     }
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                Game g = new Game();
-                g.setVisible(true);
-            }
+        EventQueue.invokeLater(() -> {
+            Game g = new Game();
+            g.setVisible(true);
         });
     }
 }

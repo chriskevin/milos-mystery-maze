@@ -2,11 +2,10 @@ package se.chriskevin.mysterymaze.behavior;
 
 import se.chriskevin.mysterymaze.AnimationState;
 import se.chriskevin.mysterymaze.Behavior;
-import se.chriskevin.mysterymaze.Character;
+import se.chriskevin.mysterymaze.GameCharacter;
 import se.chriskevin.mysterymaze.Direction;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.*;
 
 /**
  * Created by CHSU7648 on 2016-03-13.
@@ -15,56 +14,48 @@ public enum MoveBehavior implements Behavior {
 
     MOVE() {
         @Override
-        public void execute(Character character) {
-            if (character.isColliding()) {
-                int x = character.getX();
-                x += -(character.getDx() * 1.5);
-                character.setX(x);
+        public void execute(GameCharacter gameCharacter) {
+            final Point dl = gameCharacter.getDLocation();
 
-                int y = character.getY();
-                y += -(character.getDy() * 1.5);
-                character.setY(y);
-
-                character.setDx(0);
-                character.setDy(0);
-
-                character.isColliding(false);
+            if (gameCharacter.isColliding()) {
+                gameCharacter.getLocation().translate((int) -(dl.getX() * 1.5), (int) -(dl.getY() * 1.5));
+                gameCharacter.getDLocation().setLocation(0, 0);
+                gameCharacter.isColliding(false);
             } else {
-                character.setX(character.getX() + character.getDx());
-                character.setY(character.getY() + character.getDy());
+                gameCharacter.getLocation().translate((int) dl.getX(), (int) dl.getY());
             }
         }
     },
 
     MOVE_UP() {
         @Override
-        public void execute(Character character) {
-            if (character.isColliding()) {
-                character.setDy(-character.getSpeed());
-                character.setDirection(Direction.UP);
-                character.setAnimationState(AnimationState.WALKING);
+        public void execute(GameCharacter gameCharacter) {
+            if (gameCharacter.isColliding()) {
+                gameCharacter.getDLocation().translate(0, -gameCharacter.getSpeed());
+                gameCharacter.setDirection(Direction.UP);
+                gameCharacter.setAnimationState(AnimationState.WALKING);
             }
-            character.act(MOVE);
-            character.act(StopBehavior.STOP_UP);
+            gameCharacter.act(MOVE);
+            gameCharacter.act(StopBehavior.STOP_UP);
         }
     },
 
 
     HORIZONTAL_MOVEMENT {
         @Override
-        public void execute(Character character) {
+        public void execute(GameCharacter gameCharacter) {
 
         }
     },
 
     VERTICAL_MOVEMENT {
         @Override
-        public void execute(Character character) {
+        public void execute(GameCharacter gameCharacter) {
 
         }
     };
 
-    public void execute(Character character) {
+    public void execute(GameCharacter gameCharacter) {
 
     }
 }

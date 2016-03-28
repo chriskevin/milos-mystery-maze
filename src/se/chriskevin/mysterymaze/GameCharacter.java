@@ -1,32 +1,32 @@
 package se.chriskevin.mysterymaze;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 /**
  * Created by CHSU7648 on 2016-03-04.
  */
-public class Character extends Sprite implements Actor {
+public class GameCharacter extends GameSprite implements Actor {
     protected boolean active;
     protected boolean colliding;
-    protected int dx;
-    protected int dy;
+
+    protected Point dLocation;
+
     protected int speed;
     protected Behavior behavior;
 
-    public Character(int x, int y) {
-        super(x, y);
+    public GameCharacter(Point location) {
+        super(location);
+
+        this.dLocation = new Point(0, 0);
 
         active = true;
         speed = 4;
         colliding = false;
     }
 
-    public int getDx() {
-        return this.dx;
-    }
-
-    public int getDy() {
-        return this.dy;
+    public Point getDLocation() {
+        return this.dLocation;
     }
 
     public int getSpeed() {
@@ -51,14 +51,11 @@ public class Character extends Sprite implements Actor {
 
     public void move() {
         if (colliding) {
-            x += -dx*1.5;
-            y += -dy*1.5;
-            dx = 0;
-            dy = 0;
+            location.translate((int) -(dLocation.getX() * 1.5), (int) -(dLocation.getY() * 1.5));
+            dLocation.setLocation(0, 0);
             colliding = false;
         } else {
-            x += dx;
-            y += dy;
+            location.translate((int) dLocation.getX(), (int) dLocation.getY());
         }
     }
 
@@ -66,32 +63,30 @@ public class Character extends Sprite implements Actor {
         if (colliding)
             return;
 
-        int key = e.getKeyCode();
-
-        if (key == KeyEvent.VK_SHIFT) {
-
-        }
+        final int key = e.getKeyCode();
 
         if (key == KeyEvent.VK_LEFT) {
-            dx = -speed * scale;
+            dLocation.translate(-(speed * scale), 0);
             direction = Direction.LEFT;
             animationState = AnimationState.WALKING;
         }
 
         if (key == KeyEvent.VK_RIGHT) {
-            dx = speed * scale;
+            System.out.println("Before: " + dLocation.toString());
+            dLocation.translate(speed * scale, 0);
+            System.out.println("After: " + dLocation.toString());
             direction = Direction.RIGHT;
             animationState = AnimationState.WALKING;
         }
 
         if (key == KeyEvent.VK_UP) {
-            dy = -speed * scale;
+            dLocation.translate(0, -(speed * scale));
             direction = Direction.UP;
             animationState = AnimationState.WALKING;
         }
 
         if (key == KeyEvent.VK_DOWN) {
-            dy = speed * scale;
+            dLocation.translate(0, speed * scale);
             direction = Direction.DOWN;
             animationState = AnimationState.WALKING;
         }
@@ -101,25 +96,25 @@ public class Character extends Sprite implements Actor {
         if (colliding)
             return;
 
-        int key = e.getKeyCode();
+        final int key = e.getKeyCode();
 
         if (key == KeyEvent.VK_LEFT) {
-            dx = 0;
+            dLocation.setLocation(0, dLocation.getY());
             animationState = AnimationState.STOPPED;
         }
 
         if (key == KeyEvent.VK_RIGHT) {
-            dx = 0;
+            dLocation.setLocation(0, dLocation.getY());
             animationState = AnimationState.STOPPED;
         }
 
         if (key == KeyEvent.VK_UP) {
-            dy = 0;
+            dLocation.setLocation(dLocation.getX(), 0);
             animationState = AnimationState.STOPPED;
         }
 
         if (key == KeyEvent.VK_DOWN) {
-            dy = 0;
+            dLocation.setLocation(dLocation.getX(), 0);
             animationState = AnimationState.STOPPED;
         }
     }
@@ -128,18 +123,10 @@ public class Character extends Sprite implements Actor {
         this.behavior = behavior;
     }
 
-    public void setDx(int dx) {
-        this.dx = dx;
-    }
-
-    public void setDy(int dy) {
-        this.dy = dy;
-    }
-
     @Override
     public void act() {
-        if (this.behavior != null) {
-            this.behavior.execute(this);
+        if (behavior != null) {
+            behavior.execute(this);
         }
     }
 

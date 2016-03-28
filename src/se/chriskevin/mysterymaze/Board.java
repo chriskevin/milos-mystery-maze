@@ -23,9 +23,9 @@ public class Board extends JPanel implements ActionListener {
 
     private Camera camera;
     private Timer timer;
-    private Character hero;
-    private Collection<Character> enemies;
-    private Collection<Sprite> tiles;
+    private GameCharacter hero;
+    private Collection<GameCharacter> enemies;
+    private Collection<GameSprite> tiles;
 
     private BoardGenerator generator;
 
@@ -51,19 +51,15 @@ public class Board extends JPanel implements ActionListener {
         final Collection<String> mapData = generator.parseLevelFile("/levels/level1.txt");
         createLevel(mapData);
 
-        Collection<Sprite> sprites = new ArrayList<>();
-        sprites.add(hero);
-        sprites.addAll(tiles);
-        sprites.addAll(enemies);
+        Collection<GameSprite> gameSprites = new ArrayList<>();
+        gameSprites.add(hero);
+        gameSprites.addAll(tiles);
+        gameSprites.addAll(enemies);
 
-        camera = new Camera(dimension, sprites, hero);
+        camera = new Camera(dimension, gameSprites, hero);
 
         timer = new Timer(DELAY, this);
         timer.start();
-    }
-
-    public Collection<Sprite> getTiles() {
-        return this.tiles;
     }
 
     @Override
@@ -75,9 +71,7 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private void doDrawing(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-
-        Color myColour = new Color(0, 0, 0, 128);
+        final Color myColour = new Color(0, 0, 0, 128);
         g.setColor(myColour);
         g.fillRect(0, 0, 1024, 100);
 
@@ -86,7 +80,7 @@ public class Board extends JPanel implements ActionListener {
         final String ingameMsg = !paused ? "Playing " : "Paused ";
         final String levelMsg = " Level 1";
         final String enemyMsg = " Enemies: " + enemies.size();
-        final String coordsMsg = " X: "+ hero.getX() + " Y: " + hero.getY() + " Colliding: " + hero.isColliding();
+        final String coordsMsg = " X: "+ hero.getLocation().getX() + " Y: " + hero.getLocation().getY() + " Colliding: " + hero.isColliding();
         g.drawString(ingameMsg + levelMsg + enemyMsg + coordsMsg, 32, 32);
         drawCli(g);
         g.dispose();
@@ -99,7 +93,7 @@ public class Board extends JPanel implements ActionListener {
     private void detectCollision() {
 
         // Tile checks
-        for (Sprite tile : tiles) {
+        tiles.forEach(tile -> {
             if (tile.isBlocking()) {
 
                 // Hero
@@ -109,28 +103,28 @@ public class Board extends JPanel implements ActionListener {
                 }
 
                 // Enemies
-                for (Character enemy : enemies) {
+                enemies.forEach(enemy -> {
                     if (enemy.getBounds().intersects(tile.getBounds())) {
                         enemy.isColliding(true);
                     }
-                }
+                });
             }
-        }
+        });
 
         // Enemy checks
-        for (Character enemyA : enemies) {
+        enemies.forEach(enemyA -> {
             if (enemyA.getBounds().intersects(hero.getBounds())) {
                 hero.isColliding(true);
                 enemyA.isColliding(true);
             }
 
-            for (Character enemyB : enemies) {
+            enemies.forEach(enemyB -> {
                 if (enemyB.getBounds().intersects(enemyA.getBounds())){
                     enemyA.isColliding(true);
                     enemyB.isColliding(true);
                 }
-            }
-        }
+            });
+        });
 
         // Hero is on exit
         //if (heroBounds.intersects(exitBounds)) {
@@ -139,13 +133,7 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private void act() {
-        for (Character enemy : enemies) {
-            enemy.act();
-        }
-    }
-
-    private void nextLevel() {
-
+        enemies.forEach(enemy -> enemy.act());
     }
 
     @Override
@@ -173,7 +161,7 @@ public class Board extends JPanel implements ActionListener {
 
         @Override
         public void keyReleased(KeyEvent e) {
-            int key = e.getKeyCode();
+            final int key = e.getKeyCode();
 
             if (key == 0) {
                 cli.isEnabled(!cli.isEnabled());
@@ -210,13 +198,14 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private void createLevel(Collection<String> mapData) {
+        final int TILE_WIDTH = 32;
+
         enemies = new ArrayList<>();
         tiles = new ArrayList<>();
-        int currX  = 0;
-        int currY  = 0;
+        final Point currentLocation = new Point(0, 0);
 
         // Parse map data
-        for (String row: mapData) {
+        mapData.forEach(row -> {
             System.out.println(row);
 
             // Parse row
@@ -229,56 +218,56 @@ public class Board extends JPanel implements ActionListener {
                     case 'e':
                     case 'f':
                     case 'w':
-                        createTile(currX, currY, "/images/tiles/" + type + typeId + ".gif", false);
+                        createTile(currentLocation, "/images/tiles/" + type + typeId + ".gif", false);
                         break;
                     case 'h':
-                        createTile(currX, currY, "/images/tiles/f1.gif", false);
-                        hero = CharacterFactory.createHero(currX, currY - 14, zoomFactor);
+                        createTile(currentLocation, "/images/tiles/f1.gif", false);
+                        hero = GameCharacterFactory.createHero(new Point((int) currentLocation.getX(), (int) currentLocation.getY() - 14), zoomFactor);
                         break;
                     case 'm':
-                        createTile(currX, currY, "/images/tiles/f1.gif", false);
+                        createTile(currentLocation, "/images/tiles/f1.gif", false);
                         int enemyNo = row.charAt(j + 1) - '0';
-                        createEnemy(enemyNo, currX, currY);
+                        createEnemy(enemyNo, currentLocation);
                         break;
                     case 't':
-                        createTile(currX, currY, "/images/tiles/" + type + typeId + ".gif", true);
+                        createTile(currentLocation, "/images/tiles/" + type + typeId + ".gif", true);
                         break;
                     default:
-                        currX -= 32 * zoomFactor;
+                        currentLocation.translate(-(TILE_WIDTH * zoomFactor), 0);
                         break;
                 }
 
-                currX += 32 * zoomFactor;
+                currentLocation.translate((TILE_WIDTH * zoomFactor), 0);
 
             }
-            currX = 0;
-            currY += 32 * zoomFactor;
-        }
+            currentLocation.setLocation(0, currentLocation.getY());
+            currentLocation.translate(0, (TILE_WIDTH * zoomFactor));
+        });
     }
 
-    private void createEnemy(int enemyNo, int currX, int currY) {
+    private void createEnemy(int enemyNo, Point currentLocation) {
         switch (enemyNo) {
             case 1:
-                enemies.add(CharacterFactory.createBat(currX, currY, zoomFactor));
+                enemies.add(GameCharacterFactory.createBat(new Point(currentLocation), zoomFactor));
                 break;
             case 2:
-                enemies.add(CharacterFactory.createRat(currX, currY, zoomFactor));
+                enemies.add(GameCharacterFactory.createRat(new Point(currentLocation), zoomFactor));
                 break;
             case 3:
-                enemies.add(CharacterFactory.createZombie(currX, currY - (14 * zoomFactor), zoomFactor));
+                enemies.add(GameCharacterFactory.createZombie(new Point((int) currentLocation.getX(), (int) currentLocation.getY() - (14 * zoomFactor)), zoomFactor));
                 break;
         }
     }
 
-    private void createTile(int x, int y, String imageFilename, boolean blocking) {
-        final Sprite sprite = new Sprite(x, y);
-        sprite.setScale(zoomFactor);
+    private void createTile(Point currentLocation, String imageFilename, boolean blocking) {
+        final GameSprite gameSprite = new GameSprite(new Point(currentLocation));
+        gameSprite.setScale(zoomFactor);
+
         if (blocking) {
-            sprite.isBlocking(blocking);
+            gameSprite.isBlocking(blocking);
         }
-        sprite.setImage(imageFilename);
-        tiles.add(sprite);
+
+        gameSprite.setImage(imageFilename);
+        tiles.add(gameSprite);
     }
-
-
 }

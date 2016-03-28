@@ -2,14 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="18ea67da-61b6-43aa-990e-3accbaa8416f" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/GameObject.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/GameState.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/ImageSequence.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/tiles/Exit.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/tiles/Floor.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/tiles/Tile.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/tiles/Wall.java" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Character.java" afterPath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/GameCharacter.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/CharacterFactory.java" afterPath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/GameCharacterFactory.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Sprite.java" afterPath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/GameSprite.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/levels/level1.txt" afterPath="$PROJECT_DIR$/src/levels/level1.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Actor.java" afterPath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Actor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Behavior.java" afterPath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Behavior.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Board.java" afterPath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Board.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/BoardGenerator.java" afterPath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/BoardGenerator.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Camera.java" afterPath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Camera.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Character.java" afterPath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Character.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/CharacterFactory.java" afterPath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/CharacterFactory.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Game.java" afterPath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Game.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Sprite.java" afterPath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Sprite.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/behavior/MoveBehavior.java" afterPath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/behavior/MoveBehavior.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/behavior/StopBehavior.java" afterPath="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/behavior/StopBehavior.java" />
     </list>
     <ignored path="milos-mystery-maze.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -31,44 +42,29 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Character.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Character.java">
+      <file leaf-file-name="Board.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Board.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="192">
-              <caret line="12" column="23" selection-start-line="12" selection-start-column="18" selection-end-line="12" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MoveBehavior.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/behavior/MoveBehavior.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="573">
-              <caret line="46" column="12" selection-start-line="46" selection-start-column="12" selection-end-line="46" selection-end-column="12" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StopBehavior.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/behavior/StopBehavior.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="507">
-              <caret line="42" column="0" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
+            <state relative-caret-position="2244">
+              <caret line="143" column="18" selection-start-line="143" selection-start-column="18" selection-end-line="143" selection-end-column="18" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#3766#3767#0" expanded="true" />
+                <element signature="e#3819#3820#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Board.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Board.java">
+      <file leaf-file-name="GameSprite.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/GameSprite.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="323">
+              <caret line="28" column="40" selection-start-line="28" selection-start-column="40" selection-end-line="28" selection-end-column="40" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#1311#1312#0" expanded="true" />
+                <element signature="e#1343#1344#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -76,23 +72,11 @@
       <file leaf-file-name="Camera.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Camera.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="108">
-              <caret line="30" column="8" selection-start-line="30" selection-start-column="8" selection-end-line="30" selection-end-column="8" />
+            <state relative-caret-position="-209">
+              <caret line="25" column="14" selection-start-line="25" selection-start-column="14" selection-end-line="25" selection-end-column="14" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#2989#2990#0" expanded="true" />
-                <element signature="e#3025#3026#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Game.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Game.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="26" column="47" selection-start-line="26" selection-start-column="47" selection-end-line="26" selection-end-column="47" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -102,9 +86,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Enum" />
         <option value="Interface" />
         <option value="Class" />
-        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -135,23 +119,27 @@
         <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/characters/Zombie.java" />
         <option value="$PROJECT_DIR$/out/production/milos-mystery-maze/levels/level1.txt" />
         <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Level.java" />
-        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/BoardGenerator.java" />
-        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Behavior.java" />
         <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/CliAction.java" />
         <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/CLI.java" />
-        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Actor.java" />
         <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/BasicBehavior.java" />
         <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/behavior/BasicBehavior.java" />
-        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/behavior/StopBehavior.java" />
-        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/behavior/MoveBehavior.java" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/CharacterFactory.java" />
-        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Character.java" />
         <option value="$PROJECT_DIR$/src/levels/level1.txt" />
-        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Sprite.java" />
-        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Camera.java" />
-        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Board.java" />
         <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Game.java" />
+        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Character.java" />
+        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/CharacterFactory.java" />
+        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Sprite.java" />
+        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/GameCharacterFactory.java" />
+        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/behavior/StopBehavior.java" />
+        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/GameSprite.java" />
+        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Actor.java" />
+        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Behavior.java" />
+        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/BoardGenerator.java" />
+        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Board.java" />
+        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Camera.java" />
+        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/behavior/MoveBehavior.java" />
+        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/GameCharacter.java" />
+        <option value="$PROJECT_DIR$/src/se/chriskevin/mysterymaze/ImageSequence.java" />
       </list>
     </option>
   </component>
@@ -235,24 +223,6 @@
               <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="levels" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="milos-mystery-maze" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="milos-mystery-maze" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
@@ -263,7 +233,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="project.propCompiler" />
+    <property name="settings.editor.selected.configurable" value="preferences.editor" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
@@ -627,7 +597,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32946146" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32946146" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -636,7 +606,7 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39915523" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39915523" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -658,7 +628,21 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="45" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/GameCharacter.java</url>
+          <line>75</line>
+          <properties />
+          <option name="timeStamp" value="45" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/GameCharacter.java</url>
+          <line>53</line>
+          <properties />
+          <option name="timeStamp" value="46" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="47" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -667,51 +651,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/images/tiles/w2.gif">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/images/tiles/f1.gif">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/images/tiles/e1.gif">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/images/zombie/STOPPED_DOWN.gif">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/images/zombie/STOPPED_UP.gif">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/images/bat/WALKING_UP.gif">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/images/milo/STOPPED_DOWN.gif">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/images/milo/STOPPED_LEFT.gif">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/images/milo/STOPPED_RIGHT.gif">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/images/milo/STOPPED_UP.gif">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -779,14 +718,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Behavior.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="6" column="36" selection-start-line="6" selection-start-column="36" selection-end-line="6" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Downloads/Non Maven/Wasteland Struggle Client/src/game/Key.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -850,33 +781,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/CliAction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="6" column="21" selection-start-line="6" selection-start-column="21" selection-end-line="6" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Downloads/Non Maven/Wasteland Struggle Client/src/game/Camera.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="14" column="52" selection-start-line="0" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/CLI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="731">
-          <caret line="58" column="32" selection-start-line="58" selection-start-column="32" selection-end-line="58" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Actor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="7" column="32" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -920,22 +828,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/CharacterFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="131">
-          <caret line="30" column="26" selection-start-line="30" selection-start-column="26" selection-end-line="30" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/BoardGenerator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="17" column="44" selection-start-line="17" selection-start-column="30" selection-end-line="17" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/levels/level1.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="578">
@@ -944,77 +836,202 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Sprite.java">
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_73/src.zip!/java/lang/Runnable.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="845">
-          <caret line="104" column="28" selection-start-line="104" selection-start-column="28" selection-end-line="104" selection-end-column="28" />
+        <state relative-caret-position="405">
+          <caret line="67" column="25" selection-start-line="67" selection-start-column="25" selection-end-line="67" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Game.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="454">
+          <caret line="44" column="31" selection-start-line="44" selection-start-column="31" selection-end-line="44" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/GameState.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="22" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/GameObject.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="29" selection-start-line="5" selection-start-column="29" selection-end-line="5" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Actor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/AnimationState.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Behavior.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="4" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/GameSprite.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="28" column="40" selection-start-line="28" selection-start-column="40" selection-end-line="28" selection-end-column="40" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2623#2624#0" expanded="true" />
-            <element signature="e#2647#2648#0" expanded="true" />
-            <element signature="e#2729#2730#0" expanded="true" />
-            <element signature="e#2753#2754#0" expanded="true" />
-            <element signature="e#2850#2851#0" expanded="true" />
-            <element signature="e#2885#2886#0" expanded="true" />
-            <element signature="e#3240#3241#0" expanded="true" />
-            <element signature="e#3297#3298#0" expanded="true" />
-            <element signature="e#3365#3366#0" expanded="true" />
-            <element signature="e#3417#3418#0" expanded="true" />
+            <element signature="e#1311#1312#0" expanded="true" />
+            <element signature="e#1343#1344#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Board.java">
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/BoardGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+        <state relative-caret-position="374">
+          <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Character.java">
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/CliAction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="12" column="23" selection-start-line="12" selection-start-column="18" selection-end-line="12" selection-end-column="23" />
+        <state relative-caret-position="102">
+          <caret line="6" column="21" selection-start-line="6" selection-start-column="21" selection-end-line="6" selection-end-column="21" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/CLI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="488">
+          <caret line="58" column="32" selection-start-line="58" selection-start-column="32" selection-end-line="58" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/GameCharacterFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="14" column="61" selection-start-line="14" selection-start-column="61" selection-end-line="14" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Camera.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-209">
+          <caret line="25" column="14" selection-start-line="25" selection-start-column="14" selection-end-line="25" selection-end-column="14" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/behavior/MoveBehavior.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="573">
-          <caret line="46" column="12" selection-start-line="46" selection-start-column="12" selection-end-line="46" selection-end-column="12" />
+        <state relative-caret-position="204">
+          <caret line="17" column="18" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/tiles/Exit.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/tiles/Floor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/tiles/Tile.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-73">
+          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/tiles/Wall.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/behavior/StopBehavior.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="507">
-          <caret line="42" column="0" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
+        <state relative-caret-position="221">
+          <caret line="13" column="17" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Camera.java">
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/GameCharacter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="30" column="8" selection-start-line="30" selection-start-column="8" selection-end-line="30" selection-end-column="8" />
+        <state relative-caret-position="935">
+          <caret line="65" column="14" selection-start-line="65" selection-start-column="14" selection-end-line="65" selection-end-column="14" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2989#2990#0" expanded="true" />
-            <element signature="e#3025#3026#0" expanded="true" />
+            <element signature="e#574#575#0" expanded="true" />
+            <element signature="e#611#612#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Game.java">
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/ImageSequence.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="26" column="47" selection-start-line="26" selection-start-column="47" selection-end-line="26" selection-end-column="47" />
-          <folding />
+        <state relative-caret-position="352">
+          <caret line="31" column="29" selection-start-line="31" selection-start-column="29" selection-end-line="31" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#365#366#0" expanded="true" />
+            <element signature="e#401#402#0" expanded="true" />
+            <element signature="e#781#782#0" expanded="true" />
+            <element signature="e#823#824#0" expanded="true" />
+            <element signature="e#876#877#0" expanded="true" />
+            <element signature="e#916#917#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/se/chriskevin/mysterymaze/Board.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2244">
+          <caret line="143" column="18" selection-start-line="143" selection-start-column="18" selection-end-line="143" selection-end-column="18" />
+          <folding>
+            <element signature="e#3766#3767#0" expanded="true" />
+            <element signature="e#3819#3820#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

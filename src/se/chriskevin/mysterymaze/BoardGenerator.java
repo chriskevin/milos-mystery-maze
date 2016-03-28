@@ -1,7 +1,5 @@
 package se.chriskevin.mysterymaze;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,25 +15,15 @@ public class BoardGenerator {
 
     public Collection<String> parseLevelFile(String filename) {
         final Collection<String> mapData = new ArrayList<>();
-        Scanner sc = null;
-        InputStream resourceAsStream = this.getClass().getResourceAsStream(filename);
+        final InputStream resourceAsStream = this.getClass().getResourceAsStream(filename);
 
         try {
-            sc = new Scanner(resourceAsStream);
-
-            while (sc.hasNext()) {
-                mapData.add(sc.next());
-            }
+            final Scanner sc = new Scanner(resourceAsStream);
+            sc.forEachRemaining(d -> mapData.add(d));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
         return mapData;
-    }
-
-    public static Collection<Sprite> createTiles(Collection<String> mapData) {
-        final Collection<Sprite> tiles = new ArrayList<>();
-
-        return tiles;
     }
 }
