@@ -25,14 +25,10 @@ final public class Camera {
 
         final Rectangle targetBounds = target.getBounds();
 
-        double targetX = (viewArea.getWidth() / 2) - (targetBounds.getWidth() / 2);
-        double targetY = (viewArea.getHeight() / 2) - (targetBounds.getHeight() / 2);
+        final Point targetP = new Point(((int) viewArea.getWidth() / 2) - ((int) targetBounds.getWidth() / 2), ((int) viewArea.getHeight() / 2) - ((int) targetBounds.getHeight() / 2));
+        targetP.setLocation(adjustXBoundary(targetP.getX()), adjustYBoundary(targetP.getY()));
 
-        targetX = adjustXBoundary(targetX);
-        targetY = adjustYBoundary(targetY);
-
-        double offsetX = (targetX - target.getLocation().getX());
-        double offsetY = (targetY - target.getLocation().getY());
+        final Point offsetP = new Point((int) targetP.getX() - (int) target.getLocation().getX(), (int) targetP.getY() - (int) target.getLocation().getY());
 
         double newViewAreaX = target.getLocation().getX() - (viewArea.getX() / 2) - targetBounds.getWidth();
         double newViewAreaY = target.getLocation().getY() - (viewArea.getY() / 2) - targetBounds.getHeight();
@@ -45,18 +41,18 @@ final public class Camera {
 
             if (gameSprite.isVisible()) {
                 if (gameSprite instanceof GameCharacter && ((GameCharacter) gameSprite).isColliding()) {
-                    final Point collisionZoneLocation = new Point((int) gameSprite.getBounds().getX() + (int) offsetX, (int) gameSprite.getBounds().getY() + (int) offsetY);
+                    final Point collisionZoneLocation = new Point((int) gameSprite.getBounds().getX() + (int) offsetP.getX(), (int) gameSprite.getBounds().getY() + (int) offsetP.getY());
                     drawCollisionZone(g, new Rectangle(collisionZoneLocation, gameSprite.getBounds().getSize()));
                 }
-                g2d.drawImage(gameSprite.getImage(), (int) gameSprite.getLocation().getX() + (int) offsetX, (int) gameSprite.getLocation().getY() + (int) offsetY, board);
+                g2d.drawImage(gameSprite.getImage(), (int) gameSprite.getLocation().getX() + (int) offsetP.getX(), (int) gameSprite.getLocation().getY() + (int) offsetP.getY(), board);
             }
         });
 
         if (((GameCharacter) target).isColliding()) {
-            final Point collisionZoneLocation = new Point((int) target.getBounds().getX() + (int) offsetX, (int) target.getBounds().getY() + (int) offsetY);
+            final Point collisionZoneLocation = new Point((int) target.getBounds().getX() + (int) offsetP.getX(), (int) target.getBounds().getY() + (int) offsetP.getY());
             drawCollisionZone(g, new Rectangle(collisionZoneLocation, target.getBounds().getSize()));
         }
-        g2d.drawImage(target.getImage(), (int) targetX, (int) targetY, board);
+        g2d.drawImage(target.getImage(), (int) targetP.getX(), (int) targetP.getY(), board);
     }
 
     private double adjustXBoundary(double x) {
