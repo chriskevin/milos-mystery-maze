@@ -3,6 +3,7 @@ package se.chriskevin.mysterymaze;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -13,8 +14,8 @@ public class BoardGenerator {
     public BoardGenerator() {
     }
 
-    public Collection<String> parseLevelFile(String filename) {
-        final Collection<String> mapData = new ArrayList<>();
+    public List<String> parseLevelFile(String filename) {
+        final List<String> mapData = new ArrayList<>();
         final InputStream resourceAsStream = this.getClass().getResourceAsStream(filename);
 
         try {

@@ -1,9 +1,8 @@
 package se.chriskevin.mysterymaze.behavior;
 
-import se.chriskevin.mysterymaze.AnimationState;
-import se.chriskevin.mysterymaze.Behavior;
-import se.chriskevin.mysterymaze.GameCharacter;
-import se.chriskevin.mysterymaze.Direction;
+import se.chriskevin.mysterymaze.animation.AnimationState;
+import se.chriskevin.mysterymaze.animation.Direction;
+import se.chriskevin.mysterymaze.environment.GameSprite;
 
 import java.awt.*;
 
@@ -12,50 +11,99 @@ import java.awt.*;
  */
 public enum MoveBehavior implements Behavior {
 
+    BOUNCE_BACK() {
+        @Override
+        public void execute(GameSprite sprite) {
+            final Point dl = sprite.getDLocation();
+            int fullSpeed = sprite.getSpeed();
+            int halfSpeed = sprite.getSpeed() / 2;
+
+            if (sprite.getDirection() == Direction.DOWN) {
+                sprite.getLocation().translate(0, (int) (dl.getY() - halfSpeed));
+            } else if (sprite.getDirection() == Direction.LEFT) {
+                sprite.getLocation().translate((int) (dl.getX() + halfSpeed), 0);
+            } else if (sprite.getDirection() == Direction.RIGHT) {
+                sprite.getLocation().translate((int) -(dl.getX() + halfSpeed), 0);
+            } else if (sprite.getDirection() == Direction.UP) {
+                sprite.getLocation().translate(0, (int) -(dl.getY() - halfSpeed));
+            }
+
+            sprite.getDLocation().setLocation(0, 0);
+        }
+    },
+
     MOVE() {
         @Override
-        public void execute(GameCharacter gameCharacter) {
-            final Point dl = gameCharacter.getDLocation();
+        public void execute(GameSprite sprite) {
+            final Point dl = sprite.getDLocation();
+            sprite.getLocation().translate((int) dl.getX(), (int) dl.getY());
+        }
+    },
 
-            if (gameCharacter.isColliding()) {
-                gameCharacter.getLocation().translate((int) -(dl.getX() * 1.5), (int) -(dl.getY() * 1.5));
-                gameCharacter.getDLocation().setLocation(0, 0);
-                gameCharacter.isColliding(false);
-            } else {
-                gameCharacter.getLocation().translate((int) dl.getX(), (int) dl.getY());
-            }
+    MOVE_DOWN() {
+        @Override
+        public void execute(GameSprite sprite) {
+            move(sprite, 0, sprite.getSpeed(), Direction.DOWN, StopBehavior.STOP_DOWN);
+        }
+    },
+
+    MOVE_LEFT() {
+        @Override
+        public void execute(GameSprite sprite) {
+            move(sprite, -sprite.getSpeed(), 0, Direction.LEFT, StopBehavior.STOP_LEFT);
+        }
+    },
+
+    MOVE_RIGHT() {
+        @Override
+        public void execute(GameSprite sprite) {
+            move(sprite, sprite.getSpeed(), 0, Direction.RIGHT, StopBehavior.STOP_RIGHT);
         }
     },
 
     MOVE_UP() {
         @Override
-        public void execute(GameCharacter gameCharacter) {
-            if (gameCharacter.isColliding()) {
-                gameCharacter.getDLocation().translate(0, -gameCharacter.getSpeed());
-                gameCharacter.setDirection(Direction.UP);
-                gameCharacter.setAnimationState(AnimationState.WALKING);
-            }
-            gameCharacter.act(MOVE);
-            gameCharacter.act(StopBehavior.STOP_UP);
+        public void execute(GameSprite sprite) {
+            move(sprite, 0, -sprite.getSpeed(), Direction.UP, StopBehavior.STOP_UP);
         }
     },
 
 
     HORIZONTAL_MOVEMENT {
         @Override
-        public void execute(GameCharacter gameCharacter) {
+        public void execute(GameSprite sprite) {
+            if (sprite.getDirection() == Direction.DOWN) {
+                sprite.act(MOVE_DOWN);
+            } else if (sprite.getDirection() == Direction.UP) {
+                sprite.act(MOVE_UP);
+            }
 
+            if (sprite.isColliding()) {
+                if (sprite.getDirection() == Direction.DOWN) {
+                    sprite.act(MOVE_UP);
+                } else if (sprite.getDirection() == Direction.UP) {
+                    sprite.act(MOVE_DOWN);
+                }
+            }
         }
     },
 
     VERTICAL_MOVEMENT {
         @Override
-        public void execute(GameCharacter gameCharacter) {
+        public void execute(GameSprite sprite) {
 
         }
     };
 
-    public void execute(GameCharacter gameCharacter) {
+    public void execute(GameSprite sprite) {
 
+    }
+
+    private static void move(GameSprite sprite, int x, int y, Direction direction, StopBehavior stopBehavior) {
+        sprite.getDLocation().translate(x, y);
+        sprite.setDirection(direction);
+        sprite.setAnimationState(AnimationState.WALKING);
+        sprite.act(MOVE);
+        sprite.act(stopBehavior);
     }
 }

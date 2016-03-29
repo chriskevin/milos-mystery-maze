@@ -1,4 +1,4 @@
-package se.chriskevin.mysterymaze;
+package se.chriskevin.mysterymaze.animation;
 
 import java.awt.*;
 import java.util.List;

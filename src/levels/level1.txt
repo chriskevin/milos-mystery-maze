@@ -30,6 +30,3 @@ t1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1
 t1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|f1|t1
 t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1|t1
 w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|t1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1|w1
-
-LEVEL 01
-========

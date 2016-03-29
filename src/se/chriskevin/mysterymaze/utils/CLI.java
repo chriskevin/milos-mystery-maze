@@ -1,6 +1,5 @@
-package se.chriskevin.mysterymaze;
+package se.chriskevin.mysterymaze.utils;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,9 @@
-package se.chriskevin.mysterymaze;
+package se.chriskevin.mysterymaze.environment;
+
+import se.chriskevin.mysterymaze.animation.AnimationState;
+import se.chriskevin.mysterymaze.animation.Direction;
+import se.chriskevin.mysterymaze.behavior.Actor;
+import se.chriskevin.mysterymaze.behavior.Behavior;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -10,7 +15,11 @@ import java.util.Map;
 /**
  * Created by CHSU7648 on 2016-03-12.
  */
-public class GameSprite implements GameObject {
+public class GameSprite implements GameObject, Actor {
+
+    protected Behavior behavior;
+
+    protected boolean colliding;
 
     protected Point location;
     protected Dimension size;
@@ -24,15 +33,36 @@ public class GameSprite implements GameObject {
     protected Image image;
     protected Map<String, Image> images;
 
+    protected Point dLocation;
+
+    protected int speed;
+
     public GameSprite(Point location) {
         this.location = location;
+        this.dLocation = new Point(0, 0);
         this.size = new Dimension(0, 0);
         this.scale = 1;
 
-        blocking = false;
-        visible = true;
         animationState = AnimationState.STOPPED;
+        blocking = false;
+        colliding = false;
         direction = Direction.DOWN;
+        speed = 4;
+        visible = true;
+    }
+
+    @Override
+    public void act() {
+        if (behavior != null) {
+            behavior.execute(this);
+        }
+    }
+
+    @Override
+    public void act(Behavior behavior) {
+        if (behavior != null) {
+            behavior.execute(this);
+        }
     }
 
     public Rectangle getBounds() {
@@ -41,6 +71,10 @@ public class GameSprite implements GameObject {
 
     public Direction getDirection() {
         return this.direction;
+    }
+
+    public Point getDLocation() {
+        return this.dLocation;
     }
 
     public Image getImage() {
@@ -56,12 +90,24 @@ public class GameSprite implements GameObject {
         return this.size;
     }
 
+    public int getSpeed() {
+        return this.speed * scale;
+    }
+
     public boolean isBlocking() {
         return blocking;
     }
 
     public void isBlocking(boolean blocking) {
         this.blocking = blocking;
+    }
+
+    public boolean isColliding() {
+        return colliding;
+    }
+
+    public void isColliding(boolean colliding) {
+        this.colliding = colliding;
     }
 
     public boolean isVisible() {
@@ -78,6 +124,10 @@ public class GameSprite implements GameObject {
 
     public void setAnimationState(AnimationState animationState) {
         this.animationState = animationState;
+    }
+
+    public void setBehavior(Behavior behavior) {
+        this.behavior = behavior;
     }
 
     public void setDirection(Direction direction) {
@@ -100,10 +150,8 @@ public class GameSprite implements GameObject {
 
     private Image loadImage(String imageName) {
         try {
-            //ImageIcon ii = new ImageIcon(getClass().getResource(imageName));
             BufferedImage originalImage = ImageIO.read(new File(getClass().getResource(imageName).toURI()));
             return resize(this.scale, originalImage);
-            //return ii.getImage();
         } catch (Exception e) {
             throw new RuntimeException("Failed to load image: " + imageName);
         }
@@ -117,5 +165,9 @@ public class GameSprite implements GameObject {
 
     public void setScale(int factor) {
         this.scale = factor;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
 }

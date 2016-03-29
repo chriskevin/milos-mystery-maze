@@ -1,6 +1,8 @@
-package se.chriskevin.mysterymaze;
+package se.chriskevin.mysterymaze.environment.utils;
 
+import se.chriskevin.mysterymaze.animation.AnimationState;
 import se.chriskevin.mysterymaze.behavior.MoveBehavior;
+import se.chriskevin.mysterymaze.environment.GameSprite;
 
 import java.awt.*;
 import java.util.Map;
@@ -11,8 +13,8 @@ import java.util.HashMap;
  */
 public class GameCharacterFactory {
 
-    public static GameCharacter createHero(Point location, int scale) {
-        final GameCharacter hero = new GameCharacter(location);
+    public static GameSprite createHero(Point location, int scale) {
+        final GameSprite hero = new GameSprite(location);
         hero.setScale(scale);
         final Map<String, String> imageMap = new HashMap<>();
         imageMap.put("STOPPED_DOWN", "/images/milo/STOPPED_DOWN.gif");
@@ -27,8 +29,8 @@ public class GameCharacterFactory {
         return hero;
     }
 
-    public static GameCharacter createBat(Point location, int scale) {
-        final GameCharacter bat = new GameCharacter(location);
+    public static GameSprite createBat(Point location, int scale) {
+        final GameSprite bat = new GameSprite(location);
         bat.setScale(scale);
         bat.setAnimationState(AnimationState.WALKING);
         final Map<String, String> imageMap = new HashMap<>();
@@ -41,12 +43,12 @@ public class GameCharacterFactory {
         imageMap.put("WALKING_RIGHT", "/images/bat/WALKING_RIGHT.gif");
         imageMap.put("WALKING_UP", "/images/bat/WALKING_UP.gif");
         bat.setImages(imageMap);
-        bat.setBehavior(MoveBehavior.MOVE_UP);
+        bat.setBehavior(MoveBehavior.HORIZONTAL_MOVEMENT);
         return bat;
     }
 
-    public static GameCharacter createRat(Point location, int scale) {
-        final GameCharacter rat = new GameCharacter(location);
+    public static GameSprite createRat(Point location, int scale) {
+        final GameSprite rat = new GameSprite(location);
         rat.setScale(scale);
         final Map<String, String> imageMap = new HashMap<>();
         imageMap.put("STOPPED_DOWN", "/images/rat/STOPPED_LEFT.gif");
@@ -61,13 +63,14 @@ public class GameCharacterFactory {
         return rat;
     }
 
-    public static GameCharacter createZombie(Point location, int scale) {
-        final GameCharacter zombie = new GameCharacter(location);
+    public static GameSprite createZombie(Point location, int scale) {
+        final GameSprite zombie = new GameSprite(location);
         zombie.setScale(scale);
         final Map<String, String> imageMap = new HashMap<>();
         imageMap.put("STOPPED_DOWN", "/images/zombie/STOPPED_DOWN.gif");
         imageMap.put("STOPPED_UP", "/images/zombie/STOPPED_UP.gif");
         zombie.setImages(imageMap);
+        zombie.setBehavior(MoveBehavior.MOVE_UP);
         return zombie;
     }
 }

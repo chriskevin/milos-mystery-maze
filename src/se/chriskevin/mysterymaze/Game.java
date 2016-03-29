@@ -1,5 +1,8 @@
 package se.chriskevin.mysterymaze;
 
+import se.chriskevin.mysterymaze.environment.GameEnvironment;
+import se.chriskevin.mysterymaze.ui.GameView;
+
 import javax.swing.JFrame;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -9,6 +12,12 @@ import java.awt.image.BufferedImage;
  * @author  Chris Sundberg
  */
 public class Game extends JFrame {
+
+    private GameEngine engine;
+
+    private GameEnvironment environment;
+
+    private GameView gameView;
 
     public Game() {
         initUI();
@@ -24,7 +33,13 @@ public class Game extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         hideCursor();
-        setContentPane(new Board(this.getSize()));
+
+        environment = new GameEnvironment();
+        gameView = new GameView(this.getSize(), environment);
+        engine = new GameEngine(gameView, environment);
+        gameView.setEngine(engine);
+
+        setContentPane(gameView);
     }
 
     private void hideCursor() {
