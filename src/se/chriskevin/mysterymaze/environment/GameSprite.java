@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by CHSU7648 on 2016-03-12.
@@ -55,7 +56,7 @@ public class GameSprite implements GameObject, Actor {
     public void act() {
         if (behavior != null) {
             behavior.execute(this);
-        }
+        };
     }
 
     @Override

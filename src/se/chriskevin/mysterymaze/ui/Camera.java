@@ -9,45 +9,38 @@ import java.util.Map;
 /**
  * Created by CHSU7648 on 2016-03-14.
  */
-final public class Camera {
+public final class Camera {
 
-    private Dimension environmentDimension;
-
-    private Map<String, List<GameSprite>> sprites;
-
-    private GameSprite target;
-
-    private Rectangle viewArea;
-
-    public Camera(Dimension gameViewDimension, Dimension environmentDimension, Map<String, List<GameSprite>> sprites) {
-        this.viewArea = new Rectangle(new Point(0, 0), gameViewDimension);
-        this.environmentDimension = environmentDimension;
-        this.sprites = sprites;
-        this.target = sprites.get("PLAYER").get(0);
-    }
-
-    public void update(GameView gameView, Graphics g) {
+    public static void update(Dimension gameViewDimension, Dimension environmentDimension, Map<String, List<GameSprite>> sprites, GameView gameView, Graphics g) {
+        final Rectangle viewArea = new Rectangle(new Point(0, 0), gameViewDimension);
+        final GameSprite target = sprites.get("PLAYER").get(0);
         final Graphics2D g2d = (Graphics2D) g;
 
         final Rectangle targetBounds = target.getBounds();
 
-        final Point targetP = new Point(((int) viewArea.getWidth() / 2) - ((int) targetBounds.getWidth() / 2), ((int) viewArea.getHeight() / 2) - ((int) targetBounds.getHeight() / 2));
-        targetP.setLocation(adjustXBoundary(targetP.getX()), adjustYBoundary(targetP.getY()));
+        int viewAreaWidth = (int) viewArea.getWidth();
+        int viewAreaHeight = (int) viewArea.getHeight();
+
+        int targetAreaWidth = (int) targetBounds.getWidth();
+        int targetAreaHeight = (int) targetBounds.getHeight();
+
+        final Point targetP = new Point((viewAreaWidth / 2) - (targetAreaWidth / 2), (viewAreaHeight / 2) - (targetAreaHeight / 2));
+        targetP.setLocation(adjustXBoundary(targetP.getX(), viewArea, environmentDimension, target), adjustYBoundary(targetP.getY(), viewArea, environmentDimension, target));
 
         final Point offsetP = new Point((int) targetP.getX() - (int) target.getLocation().getX(), (int) targetP.getY() - (int) target.getLocation().getY());
 
         double newViewAreaX = target.getLocation().getX() - (viewArea.getX() / 2) - targetBounds.getWidth();
         double newViewAreaY = target.getLocation().getY() - (viewArea.getY() / 2) - targetBounds.getHeight();
-        this.viewArea.setLocation((int) newViewAreaX, (int) newViewAreaY);
+        viewArea.setLocation((int) newViewAreaX, (int) newViewAreaY);
 
         sprites.get("TILE").forEach(sprite -> {
-            renderSprite(sprite, g, offsetP, gameView);
+            renderSprite(sprite, g, offsetP, gameView, target, viewArea);
         });
 
         sprites.forEach((setName, spriteList) -> {
             if (setName != "TILE") {
                 spriteList.forEach(sprite -> {
-                    renderSprite(sprite, g, offsetP, gameView);
+                    renderSprite(sprite, g, offsetP, gameView, target, viewArea);
                 });
             }
         });
@@ -59,7 +52,7 @@ final public class Camera {
         g2d.drawImage(target.getImage(), (int) targetP.getX(), (int) targetP.getY(), gameView);
     }
 
-    private void renderSprite(GameSprite sprite, Graphics g, Point offsetP, GameView gameView) {
+    public static void renderSprite(GameSprite sprite, Graphics g, Point offsetP, GameView gameView, GameSprite target, Rectangle viewArea) {
         final Graphics2D g2d = (Graphics2D) g;
 
         if (!sprite.equals(target)) {
@@ -75,37 +68,19 @@ final public class Camera {
         }
     }
 
-    private double adjustXBoundary(double x) {
+    public static double adjustXBoundary(double x, Rectangle viewArea, Dimension environmentDimension, GameSprite target) {
         final double halfWidth = viewArea.getWidth() / 2;
-
-        if (target.getLocation().getX() <= halfWidth || target.getLocation().getX() >= (environmentDimension.getWidth() - halfWidth)) {
-            return target.getLocation().getX();
-        } else {
-            return x;
-        }
+        return (target.getLocation().getX() <= halfWidth || target.getLocation().getX() >= (environmentDimension.getWidth() - halfWidth)) ? target.getLocation().getX() : x;
     }
 
-    private double adjustYBoundary(double y) {
+    public static double adjustYBoundary(double y, Rectangle viewArea, Dimension environmentDimension, GameSprite target) {
         final double halfHeight = viewArea.getHeight() / 2;
-
-        if (target.getLocation().getY() <= halfHeight || target.getLocation().getY() >= (environmentDimension.getHeight() - halfHeight)) {
-            return target.getLocation().getY();
-        } else {
-            return y;
-        }
+        return (target.getLocation().getY() <= halfHeight || target.getLocation().getY() >= (environmentDimension.getHeight() - halfHeight)) ? target.getLocation().getY() : y;
     }
 
-    private void drawCollisionZone(Graphics g, Rectangle bounds) {
+    public static void drawCollisionZone(Graphics g, Rectangle bounds) {
         final Color myColour = new Color(255, 0, 0, 128);
         g.setColor(myColour);
         g.fillRect((int) bounds.getX(), (int) bounds.getY(), (int) bounds.getWidth(), (int) bounds.getHeight());
-    }
-
-    /**
-     * This method sets the target to follow.
-     * @param target
-     */
-    public void setTarget(GameSprite target) {
-        this.target = target;
     }
 }

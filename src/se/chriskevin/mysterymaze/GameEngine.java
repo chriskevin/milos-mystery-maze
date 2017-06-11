@@ -1,7 +1,9 @@
 package se.chriskevin.mysterymaze;
 
 import se.chriskevin.mysterymaze.behavior.MoveBehavior;
+import se.chriskevin.mysterymaze.collision.CollisionHandler;
 import se.chriskevin.mysterymaze.environment.GameEnvironment;
+import se.chriskevin.mysterymaze.environment.GameSprite;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -35,12 +37,8 @@ public class GameEngine implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (!paused) {
             //environment.detectCollision();
-            environment.getSprites().forEach((setName, spriteList) -> {
-                spriteList.forEach(sprite -> {
-                    sprite.act();
-                });
-            });
-            environment.detectCollision();
+            environment.getSprites().forEach((setName, spriteList) -> spriteList.forEach(GameSprite::act));
+            CollisionHandler.setCollisions(environment.getSprites());
         }
 
         gameView.update();

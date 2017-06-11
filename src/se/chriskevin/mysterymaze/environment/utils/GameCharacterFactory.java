@@ -7,11 +7,12 @@ import se.chriskevin.mysterymaze.environment.GameSprite;
 import java.awt.*;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Optional;
 
 /**
  * Created by CHSU7648 on 2016-03-08.
  */
-public class GameCharacterFactory {
+public final class GameCharacterFactory {
 
     public static GameSprite createHero(Point location, int scale) {
         final GameSprite hero = new GameSprite(location);

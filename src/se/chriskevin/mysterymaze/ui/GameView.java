@@ -37,11 +37,11 @@ public class GameView extends JPanel {
         keyMapMove.put(KeyEvent.VK_UP, MoveBehavior.MOVE_UP);
     }
 
-    private Camera camera;
-
     private CLI cli;
 
     private boolean inputEnabled;
+
+    private Dimension dimension;
 
     private GameEngine engine;
 
@@ -49,6 +49,7 @@ public class GameView extends JPanel {
 
     public GameView(Dimension dimension, GameEnvironment environment) {
         this.environment = environment;
+        this.dimension = dimension;
 
         addKeyListener(new TAdapter());
         setFocusable(true);
@@ -58,7 +59,6 @@ public class GameView extends JPanel {
 
         inputEnabled = true;
         cli = new CLI();
-        camera = new Camera(dimension, environment.getDimension(), environment.getSprites());
     }
 
     public void enableInput(boolean enabled) {
@@ -76,7 +76,7 @@ public class GameView extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        camera.update(this, g);
+        Camera.update(dimension, environment.getDimension(), environment.getSprites(), this, g);
         doDrawing(g);
         Toolkit.getDefaultToolkit().sync();
     }
