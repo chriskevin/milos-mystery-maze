@@ -24,9 +24,9 @@ public final class Dimension<T extends Number> implements Serializable {
     /*public int hashCode() {
         Double var1 = this.width. + this.height;
         return var1 * (var1 + 1) / 2 + this.width;
-    }
+    }*/
 
     public String toString() {
         return this.getClass().getName() + "[width=" + this.width + ",height=" + this.height + "]";
-    }*/
+    }
 }

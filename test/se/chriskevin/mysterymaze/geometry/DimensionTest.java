@@ -27,6 +27,6 @@ public class DimensionTest {
 
     @Test
     public void verifyToString() {
-        assertEquals("", (new Dimension<>(2, 2)).toString());
+        assertEquals(Dimension.class.getName() + "[width=2,height=2]", new Dimension<>(2, 2).toString());
     }
 }
