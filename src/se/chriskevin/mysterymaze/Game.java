@@ -1,6 +1,7 @@
 package se.chriskevin.mysterymaze;
 
 import se.chriskevin.mysterymaze.environment.GameEnvironment;
+import se.chriskevin.mysterymaze.geometry.Dimension;
 import se.chriskevin.mysterymaze.ui.GameView;
 
 import javax.swing.JFrame;
@@ -14,9 +15,7 @@ import java.awt.image.BufferedImage;
 public class Game extends JFrame {
 
     private GameEngine engine;
-
     private GameEnvironment environment;
-
     private GameView gameView;
 
     public Game() {
@@ -35,7 +34,7 @@ public class Game extends JFrame {
         hideCursor();
 
         environment = new GameEnvironment();
-        gameView = new GameView(this.getSize(), environment);
+        gameView = new GameView(new Dimension(this.getSize().width, this.getSize().height), environment);
         engine = new GameEngine(gameView, environment);
         gameView.setEngine(engine);
 

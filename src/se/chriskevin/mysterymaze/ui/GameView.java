@@ -6,6 +6,9 @@ import se.chriskevin.mysterymaze.behavior.MoveBehavior;
 import se.chriskevin.mysterymaze.behavior.StopBehavior;
 import se.chriskevin.mysterymaze.environment.GameEnvironment;
 import se.chriskevin.mysterymaze.environment.GameSprite;
+import se.chriskevin.mysterymaze.environment.SpriteType;
+import se.chriskevin.mysterymaze.geometry.Dimension;
+import se.chriskevin.mysterymaze.geometry.Point3D;
 import se.chriskevin.mysterymaze.utils.CLI;
 
 import javax.swing.*;
@@ -14,8 +17,14 @@ import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.Math.addExact;
+import static java.util.stream.Collectors.toList;
+import static se.chriskevin.mysterymaze.environment.ImageUtil.getImage;
+import static se.chriskevin.mysterymaze.environment.utils.GameSpriteUtil.getByType;
+import static se.chriskevin.mysterymaze.environment.utils.GameSpriteUtil.getPlayer;
+
 /**
- * Created by CHSU7648 on 2016-03-29.
+ * Created by Chris Sundberg on 2016-03-29.
  */
 public class GameView extends JPanel {
 
@@ -38,13 +47,9 @@ public class GameView extends JPanel {
     }
 
     private CLI cli;
-
-    private boolean inputEnabled;
-
+    private Boolean inputEnabled;
     private Dimension dimension;
-
     private GameEngine engine;
-
     private GameEnvironment environment;
 
     public GameView(Dimension dimension, GameEnvironment environment) {
@@ -54,11 +59,26 @@ public class GameView extends JPanel {
         addKeyListener(new TAdapter());
         setFocusable(true);
         setBackground(Color.BLACK);
-        setPreferredSize(dimension);
+        setPreferredSize(new java.awt.Dimension(dimension.width.intValue(), dimension.height.intValue()));
         setDoubleBuffered(true);
 
         inputEnabled = true;
         cli = new CLI();
+    }
+
+    public static void renderSprite(Graphics g, GameView gameView, Point3D offsetP, GameSprite sprite) {
+        final Graphics2D g2d = (Graphics2D) g;
+
+        if (sprite.colliding) {
+            drawCollisionZone(g, new Rectangle(addExact(sprite.position.x, offsetP.x), addExact(sprite.position.y, offsetP.y), sprite.size.width, sprite.size.height));
+        }
+        g2d.drawImage(getImage(sprite.animationState, sprite.direction, sprite.images), addExact(sprite.position.x, offsetP.x), addExact(sprite.position.y, offsetP.y), gameView);
+    }
+
+    public static void drawCollisionZone(Graphics g, Rectangle bounds) {
+        final Color myColour = new Color(255, 0, 0, 128);
+        g.setColor(myColour);
+        g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
     }
 
     public void enableInput(boolean enabled) {
@@ -76,7 +96,7 @@ public class GameView extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Camera.update(dimension, environment.getDimension(), environment.getSprites(), this, g);
+        Camera.update(dimension, environment.size, environment.sprites, this, g);
         doDrawing(g);
         Toolkit.getDefaultToolkit().sync();
     }
@@ -90,10 +110,28 @@ public class GameView extends JPanel {
         g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
         final String ingameMsg = !engine.isPaused() ? "Playing " : "Paused ";
         final String levelMsg = " Level 1";
-        final String enemyMsg = " Enemies: " + environment.getSprites().get("ENEMY").size();
-        final GameSprite player = environment.getSprites().get("PLAYER").get(0);
-        final String coordsMsg = " X: "+ player.getLocation().getX() + " Y: " + player.getLocation().getY() + " Colliding: " + player.isColliding();
-        g.drawString(ingameMsg + levelMsg + enemyMsg + coordsMsg, 32, 32);
+        final String enemyMsg = " Enemies: " + getByType(SpriteType.ENEMY, environment.sprites).size();
+        final GameSprite player = getPlayer(environment.sprites);
+
+        final String coordsMsg =
+            new StringBuilder()
+                .append(" X: ")
+                .append(player.position.x)
+                .append(" Y: ")
+                .append(player.position.y)
+                .append(" Colliding: ")
+                .append(player.colliding)
+                .toString();
+
+        final String debugMsg =
+            new StringBuilder()
+                .append(ingameMsg)
+                .append(levelMsg)
+                .append(enemyMsg)
+                .append(coordsMsg)
+                .toString();
+
+        g.drawString(debugMsg,32,32);
         drawCli(g);
         g.dispose();
     }
@@ -106,30 +144,30 @@ public class GameView extends JPanel {
 
         @Override
         public void keyReleased(KeyEvent e) {
-            final int key = e.getKeyCode();
+            final Integer key = e.getKeyCode();
 
-            if (key == 0) {
+            if (key.equals(0)) {
                 cli.isEnabled(!cli.isEnabled());
                 engine.togglePaused();
             }
 
             if (cli.isEnabled()) {
-                if (key >= 65 && key <= 90 || key == KeyEvent.VK_SPACE) {
-                    String currentCommand = cli.getCurrentCommand() + (char) key;
+                if (key >= 65 && key <= 90 || key.equals(KeyEvent.VK_SPACE)) {
+                    String currentCommand = cli.getCurrentCommand() + (char) key.intValue();
                     cli.setCurrentCommand(currentCommand);
-                } else if (key == KeyEvent.VK_BACK_SPACE) {
+                } else if (key.equals(KeyEvent.VK_BACK_SPACE)) {
                     String currentCommand = cli.getCurrentCommand();
                     cli.setCurrentCommand(currentCommand.substring(0, currentCommand.length() -1));
-                } else if (key == KeyEvent.VK_ENTER) {
+                } else if (key.equals(KeyEvent.VK_ENTER)) {
                     cli.run();
                 }
             }
 
-            if (cli.isEnabled() && key == KeyEvent.VK_SPACE) {
+            if (cli.isEnabled() && key.equals(KeyEvent.VK_SPACE)) {
                 engine.togglePaused();
             } else {
                 if (!engine.isPaused()) {
-                    environment.getSprites().get("PLAYER").get(0).act(keyMapStop.get(e.getKeyCode()));
+                    keyMapStop.get(e.getKeyCode()).execute(getPlayer(environment.sprites));
                 }
             }
         }
@@ -137,7 +175,7 @@ public class GameView extends JPanel {
         @Override
         public void keyPressed(KeyEvent e) {
             if (!engine.isPaused()) {
-                environment.getSprites().get("PLAYER").get(0).act(keyMapMove.get(e.getKeyCode()));
+                keyMapMove.get(e.getKeyCode()).execute(getPlayer(environment.sprites));
             }
         }
     }

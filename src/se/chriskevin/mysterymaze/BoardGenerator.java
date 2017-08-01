@@ -1,17 +1,25 @@
 package se.chriskevin.mysterymaze;
 
 import se.chriskevin.mysterymaze.environment.GameSprite;
-import se.chriskevin.mysterymaze.environment.utils.GameCharacterFactory;
+import se.chriskevin.mysterymaze.environment.SpriteType;
+import se.chriskevin.mysterymaze.geometry.Point3D;
 
-import java.awt.*;
 import java.io.InputStream;
 import java.util.*;
 import java.util.List;
 
+import static java.lang.Math.addExact;
+import static java.lang.Math.multiplyExact;
+import static java.lang.Math.subtractExact;
+import static se.chriskevin.mysterymaze.environment.utils.GameCharacterFactory.*;
+
 /**
- * Created by CHSU7648 on 2016-03-08.
+ * Created by Chris Sundberg on 2016-03-08.
  */
 public final class BoardGenerator {
+
+    public final static String IMAGE_PATH = "/images/";
+    public final static String TILE_PATH = IMAGE_PATH + "/tiles/";
 
     public static Optional<List<String>> parseLevelFile(String filename) {
         final InputStream resourceAsStream = BoardGenerator.class.getResourceAsStream(filename);
@@ -20,89 +28,61 @@ public final class BoardGenerator {
             final List<String> mapData = new ArrayList<>();
             final Scanner sc = new Scanner(resourceAsStream);
             sc.forEachRemaining(mapData::add);
+            sc.close();
             return Optional.ofNullable(mapData);
         } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    public static Map<String, List<GameSprite>> createLevel(Collection<String> mapData, int tileWidth, int zoomFactor) {
-        final Map<String, List<GameSprite>> sprites = new HashMap<>();
-        sprites.put("PLAYER", new ArrayList<>());
-        sprites.put("TILE", new ArrayList<>());
-        sprites.put("ENEMY", new ArrayList<>());
-
-        final Point currentLocation = new Point(0, 0);
+    public static List<GameSprite> createLevel(Collection<String> mapData, Integer tileWidth, Integer scale) {
+        final List<GameSprite> sprites = new ArrayList<>();
+        final Point3D currentLocation = new Point3D(0, 0, 0);
 
         // Parse map data
         mapData.forEach(row -> {
             System.out.println(row);
 
             // Parse row
-            for (int j = 0; j < row.length(); j += 3) {
+            for (Integer j = 0; j < row.length(); j += 3) {
                 char type = row.charAt(j);
-                char typeId = row.charAt(j + 1);
+                char typeId = row.charAt(addExact(j, 1));
 
                 // Select proper action
                 switch (type) {
                     case 'e':
                     case 'f':
                     case 'w':
-                        sprites.get("TILE").add(createTile(currentLocation, "/images/tiles/" + type + typeId + ".gif", false, zoomFactor));
+                        sprites.add(createTile(SpriteType.TILE, scale, currentLocation, false, (new StringBuilder()).append(TILE_PATH).append(type).append(typeId).append(".gif").toString()));
                         break;
                     case 'h':
-                        sprites.get("TILE").add(createTile(currentLocation, "/images/tiles/f1.gif", false, zoomFactor));
-                        sprites.get("PLAYER").add(GameCharacterFactory.createHero(new Point((int) currentLocation.getX(), (int) currentLocation.getY() - 14), zoomFactor));
-                        sprites.get("PLAYER").get(0).setSpeed(8);
+                        sprites.add(createTile(SpriteType.TILE, scale, currentLocation, false, TILE_PATH + "f1.gif"));
+                        sprites.add(createHero(SpriteType.PLAYER, scale, new Point3D(currentLocation.x, subtractExact(currentLocation.y, 14), 0)));
                         break;
                     case 'm':
-                        sprites.get("TILE").add(createTile(currentLocation, "/images/tiles/f1.gif", false, zoomFactor));
-                        int enemyNo = row.charAt(j + 1) - '0';
-                        Optional<GameSprite> sprite = createEnemy(enemyNo, currentLocation, zoomFactor);
+                        sprites.add(createTile(SpriteType.TILE, scale, currentLocation, false, TILE_PATH + "f1.gif"));
+                        Integer enemyNo = row.charAt(addExact(j, 1)) - '0';
+                        Optional<GameSprite> sprite = createEnemy(SpriteType.ENEMY, enemyNo, currentLocation, scale);
                         if (sprite.isPresent()) {
-                            sprites.get("ENEMY").add(sprite.get());
+                            sprites.add(sprite.get());
                         }
                         break;
                     case 't':
-                        sprites.get("TILE").add(createTile(currentLocation, "/images/tiles/" + type + typeId + ".gif", true, zoomFactor));
+                        sprites.add(createTile(SpriteType.TILE, scale, currentLocation, true, (new StringBuilder()).append(TILE_PATH).append(type).append(typeId).append(".gif").toString()));
                         break;
                     default:
-                        currentLocation.translate(-(tileWidth * zoomFactor), 0);
+                        currentLocation.translate(-multiplyExact(tileWidth, scale), 0, 0);
                         break;
                 }
 
-                currentLocation.translate((tileWidth * zoomFactor), 0);
+                currentLocation.translate(multiplyExact(tileWidth, scale), 0, 0);
 
             }
-            currentLocation.setLocation(0, currentLocation.getY());
-            currentLocation.translate(0, (tileWidth * zoomFactor));
+            // currentLocation.setLocation(0, currentLocation.y);
+            currentLocation.translate(0, multiplyExact(tileWidth, scale), 0);
         });
 
         return sprites;
     }
 
-    public static Optional<GameSprite> createEnemy(int enemyNo, Point currentLocation, int zoomFactor) {
-        switch (enemyNo) {
-            case 1:
-                return Optional.of(GameCharacterFactory.createBat(new Point(currentLocation), zoomFactor));
-            case 2:
-                return Optional.of(GameCharacterFactory.createRat(new Point(currentLocation), zoomFactor));
-            case 3:
-                return Optional.of(GameCharacterFactory.createZombie(new Point((int) currentLocation.getX(), (int) currentLocation.getY() - (14 * zoomFactor)), zoomFactor));
-        }
-
-        return Optional.empty();
-    }
-
-    public static GameSprite createTile(Point currentLocation, String imageFilename, boolean blocking, int zoomFactor) {
-        final GameSprite gameSprite = new GameSprite(new Point(currentLocation));
-        gameSprite.setScale(zoomFactor);
-
-        if (blocking) {
-            gameSprite.isBlocking(blocking);
-        }
-
-        gameSprite.setImage(imageFilename);
-        return gameSprite;
-    }
 }

@@ -3,7 +3,7 @@ package se.chriskevin.mysterymaze.sound;
 public class Player {
 
     /**
-     * soundFileLocation stores the sounds location on the harddrive.
+     * soundFileLocation stores the sounds position on the harddrive.
      */
     public static String[] soundFileLocation = new String[17];
     SoundPlayer channel1;

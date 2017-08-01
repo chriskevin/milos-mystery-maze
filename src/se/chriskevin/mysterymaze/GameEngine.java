@@ -1,47 +1,47 @@
 package se.chriskevin.mysterymaze;
 
-import se.chriskevin.mysterymaze.behavior.MoveBehavior;
 import se.chriskevin.mysterymaze.collision.CollisionHandler;
 import se.chriskevin.mysterymaze.environment.GameEnvironment;
 import se.chriskevin.mysterymaze.environment.GameSprite;
+import se.chriskevin.mysterymaze.ui.GameView;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Created by CHSU7648 on 2016-03-29.
+ * Created by Chris Sundberg on 2016-03-29.
  */
 public class GameEngine implements ActionListener {
 
-    private final int DELAY = 25;
+    private final static Integer DELAY = 25;
 
-    private GameEnvironment environment;
+    private final GameEnvironment environment;
+    private final GameView gameView;
+    private Boolean paused;
+    private final Timer timer;
 
-    private se.chriskevin.mysterymaze.ui.GameView gameView;
-
-    private boolean paused;
-
-    private Timer timer;
-
-    public GameEngine(se.chriskevin.mysterymaze.ui.GameView gameView, GameEnvironment environment) {
+    public GameEngine(GameView gameView, GameEnvironment environment) {
         this.gameView = gameView;
         this.environment = environment;
+        this.paused = false;
+        this.timer = new Timer(DELAY, this);
 
-        paused = false;
-        timer = new Timer(DELAY, this);
         timer.start();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!paused) {
-            //environment.detectCollision();
-            environment.getSprites().forEach((setName, spriteList) -> spriteList.forEach(GameSprite::act));
-            CollisionHandler.setCollisions(environment.getSprites());
+            //environment.sprites.forEach(GameEngine::act);
+            //CollisionHandler.setCollisions(environment.sprites);
         }
 
         gameView.update();
+    }
+
+    public static void act(GameSprite sprite) {
+        sprite.behavior.ifPresent((b) -> b.execute(sprite));
     }
 
     public boolean isPaused() {

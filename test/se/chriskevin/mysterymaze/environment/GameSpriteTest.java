@@ -1,7 +1,7 @@
 package se.chriskevin.mysterymaze.environment;
 
 /**
- * Created by chsu7648 on 2017-06-12.
+ * Created by Chris Sundberg on 2017-06-12.
  */
 public class GameSpriteTest {
 }

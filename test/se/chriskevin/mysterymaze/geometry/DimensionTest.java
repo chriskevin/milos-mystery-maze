@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Created by chsu7648 on 2017-06-12.
+ * Created by Chris Sundberg on 2017-06-12.
  */
 public class DimensionTest {
     @Test
@@ -23,6 +23,11 @@ public class DimensionTest {
         final Dimension<Double> b = new Dimension<>(2.30, 2.30);
         assertFalse(a.equals(b));
         assertFalse(a.equals(null));
+    }
+
+    @Test
+    public void verifyHashCode() {
+        assertEquals((new Dimension<Integer>(2,2)).hashCode(), 12);
     }
 
     @Test

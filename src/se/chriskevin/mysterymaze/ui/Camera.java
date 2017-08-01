@@ -1,86 +1,62 @@
 package se.chriskevin.mysterymaze.ui;
 
 import se.chriskevin.mysterymaze.environment.GameSprite;
+import se.chriskevin.mysterymaze.environment.SpriteType;
+import se.chriskevin.mysterymaze.geometry.Dimension;
+import se.chriskevin.mysterymaze.geometry.Point3D;
 
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
+import static se.chriskevin.mysterymaze.Calculation.half;
+import static se.chriskevin.mysterymaze.environment.ImageUtil.getImage;
+import static se.chriskevin.mysterymaze.ui.GameView.drawCollisionZone;
+import static se.chriskevin.mysterymaze.ui.GameView.renderSprite;
 
 /**
- * Created by CHSU7648 on 2016-03-14.
+ * Created by Chris Sundberg on 2016-03-14.
  */
 public final class Camera {
 
-    public static void update(Dimension gameViewDimension, Dimension environmentDimension, Map<String, List<GameSprite>> sprites, GameView gameView, Graphics g) {
-        final Rectangle viewArea = new Rectangle(new Point(0, 0), gameViewDimension);
-        final GameSprite target = sprites.get("PLAYER").get(0);
+    public static void update(Dimension<Integer> gameViewSize, Dimension<Integer> environmentSize, List<GameSprite> sprites, GameView gameView, Graphics g) {
+        final Dimension<Integer> viewAreaSize = gameViewSize;
+
+        final GameSprite target = sprites.stream().filter(x -> SpriteType.PLAYER.equals(x.type)).collect(toList()).get(0);
+
+        final Integer targetX = adjustCoordinateBoundary(half(viewAreaSize.width) - half(viewAreaSize.width), target.position.x, viewAreaSize.width, environmentSize.width);
+        final Integer targetY = adjustCoordinateBoundary(half(viewAreaSize.height) - half(target.size.height), target.position.y, viewAreaSize.height, environmentSize.height);
+
+        final Point3D offsetP = new Point3D(targetX - target.position.x, targetY - target.position.y, 0);
+
+        final Integer viewAreaX = target.position.x - half(viewAreaSize.width) - target.size.width;
+        final Integer viewAreaY = target.position.y - half(viewAreaSize.height) - target.size.height;
+        final Rectangle viewArea = new Rectangle(viewAreaX, viewAreaY, gameViewSize.width, gameViewSize.height);
+
+        // All drawing should be moved to gameview
+        // Sort list so that tiles list comes first
+        getVisibleSprites(sprites, target, viewArea)
+            .forEach(x -> renderSprite(g, gameView, offsetP, x));
+
+        if (target.colliding) {
+            final Point3D collisionZoneLocation = new Point3D(target.position.x + offsetP.x, target.position.y + offsetP.y, 0);
+            drawCollisionZone(g, new Rectangle(collisionZoneLocation.x, collisionZoneLocation.y, target.size.width, target.size.height));
+        }
+
         final Graphics2D g2d = (Graphics2D) g;
-
-        final Rectangle targetBounds = target.getBounds();
-
-        int viewAreaWidth = (int) viewArea.getWidth();
-        int viewAreaHeight = (int) viewArea.getHeight();
-
-        int targetAreaWidth = (int) targetBounds.getWidth();
-        int targetAreaHeight = (int) targetBounds.getHeight();
-
-        final Point targetP = new Point((viewAreaWidth / 2) - (targetAreaWidth / 2), (viewAreaHeight / 2) - (targetAreaHeight / 2));
-        targetP.setLocation(adjustXBoundary(targetP.getX(), viewArea, environmentDimension, target), adjustYBoundary(targetP.getY(), viewArea, environmentDimension, target));
-
-        final Point offsetP = new Point((int) targetP.getX() - (int) target.getLocation().getX(), (int) targetP.getY() - (int) target.getLocation().getY());
-
-        double newViewAreaX = target.getLocation().getX() - (viewArea.getX() / 2) - targetBounds.getWidth();
-        double newViewAreaY = target.getLocation().getY() - (viewArea.getY() / 2) - targetBounds.getHeight();
-        viewArea.setLocation((int) newViewAreaX, (int) newViewAreaY);
-
-        sprites.get("TILE").forEach(sprite -> {
-            renderSprite(sprite, g, offsetP, gameView, target, viewArea);
-        });
-
-        sprites.forEach((setName, spriteList) -> {
-            if (setName != "TILE") {
-                spriteList.forEach(sprite -> {
-                    renderSprite(sprite, g, offsetP, gameView, target, viewArea);
-                });
-            }
-        });
-
-        if (target.isColliding()) {
-            final Point collisionZoneLocation = new Point((int) target.getBounds().getX() + (int) offsetP.getX(), (int) target.getBounds().getY() + (int) offsetP.getY());
-            drawCollisionZone(g, new Rectangle(collisionZoneLocation, target.getBounds().getSize()));
-        }
-        g2d.drawImage(target.getImage(), (int) targetP.getX(), (int) targetP.getY(), gameView);
+        g2d.drawImage(getImage(target.animationState, target.direction, target.images), targetX, targetY, gameView);
     }
 
-    public static void renderSprite(GameSprite sprite, Graphics g, Point offsetP, GameView gameView, GameSprite target, Rectangle viewArea) {
-        final Graphics2D g2d = (Graphics2D) g;
-
-        if (!sprite.equals(target)) {
-            sprite.isVisible(sprite.getBounds().intersects(viewArea));
-        }
-
-        if (sprite.isVisible()) {
-            if (sprite.isColliding()) {
-                final Point collisionZoneLocation = new Point((int) sprite.getBounds().getX() + (int) offsetP.getX(), (int) sprite.getBounds().getY() + (int) offsetP.getY());
-                drawCollisionZone(g, new Rectangle(collisionZoneLocation, sprite.getBounds().getSize()));
-            }
-            g2d.drawImage(sprite.getImage(), (int) sprite.getLocation().getX() + (int) offsetP.getX(), (int) sprite.getLocation().getY() + (int) offsetP.getY(), gameView);
-        }
+    public static Integer adjustCoordinateBoundary(Integer coordinate, Integer targetCoordinate, Integer viewAreaMeasurement, Integer environmentMeasurement) {
+        return (targetCoordinate <= half(viewAreaMeasurement) || targetCoordinate >= (environmentMeasurement - half(viewAreaMeasurement))) ? targetCoordinate : coordinate;
     }
 
-    public static double adjustXBoundary(double x, Rectangle viewArea, Dimension environmentDimension, GameSprite target) {
-        final double halfWidth = viewArea.getWidth() / 2;
-        return (target.getLocation().getX() <= halfWidth || target.getLocation().getX() >= (environmentDimension.getWidth() - halfWidth)) ? target.getLocation().getX() : x;
-    }
-
-    public static double adjustYBoundary(double y, Rectangle viewArea, Dimension environmentDimension, GameSprite target) {
-        final double halfHeight = viewArea.getHeight() / 2;
-        return (target.getLocation().getY() <= halfHeight || target.getLocation().getY() >= (environmentDimension.getHeight() - halfHeight)) ? target.getLocation().getY() : y;
-    }
-
-    public static void drawCollisionZone(Graphics g, Rectangle bounds) {
-        final Color myColour = new Color(255, 0, 0, 128);
-        g.setColor(myColour);
-        g.fillRect((int) bounds.getX(), (int) bounds.getY(), (int) bounds.getWidth(), (int) bounds.getHeight());
+    public static List<GameSprite> getVisibleSprites(List<GameSprite> sprites, GameSprite target, Rectangle viewArea) {
+        return sprites
+                .stream()
+                .filter(x -> !x.equals(target) && x.getBounds().intersects(viewArea))
+                .collect(toList());
     }
 }

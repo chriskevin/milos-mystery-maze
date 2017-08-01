@@ -2,173 +2,54 @@ package se.chriskevin.mysterymaze.environment;
 
 import se.chriskevin.mysterymaze.animation.AnimationState;
 import se.chriskevin.mysterymaze.animation.Direction;
-import se.chriskevin.mysterymaze.behavior.Actor;
 import se.chriskevin.mysterymaze.behavior.Behavior;
+import se.chriskevin.mysterymaze.geometry.Dimension;
+import se.chriskevin.mysterymaze.geometry.Point3D;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.Math.multiplyExact;
+
 /**
- * Created by CHSU7648 on 2016-03-12.
+ * Created by Chris Sundberg on 2016-03-12.
  */
-public class GameSprite implements GameObject, Actor {
+public class GameSprite {
 
-    protected Behavior behavior;
+    public Boolean blocking;
+    public Boolean colliding;
 
-    protected boolean colliding;
+    public final AnimationState animationState;
+    public final Optional<Behavior> behavior;
+    public final Direction direction;
+    public final Map<String, Image> images;
+    public final Point3D position;
+    public final Integer scale;
+    public final Dimension<Integer> size;
+    public final Integer speed;
+    public final SpriteType type;
 
-    protected Point location;
-    protected Dimension size;
-
-    protected int scale;
-    protected boolean visible;
-    protected boolean blocking;
-
-    protected AnimationState animationState;
-    protected Direction direction;
-    protected Image image;
-    protected Map<String, Image> images;
-
-    protected Point dLocation;
-
-    protected int speed;
-
-    public GameSprite(Point location) {
-        this.location = location;
-        this.dLocation = new Point(0, 0);
-        this.size = new Dimension(0, 0);
-        this.scale = 1;
-
-        animationState = AnimationState.STOPPED;
-        blocking = false;
-        colliding = false;
-        direction = Direction.DOWN;
-        speed = 4;
-        visible = true;
+    public GameSprite(SpriteType type, Integer scale, Boolean blocking, Point3D position, Integer speed, Direction direction, Boolean colliding, Behavior behavior, Map<String, Image> images, AnimationState animationState) {
+        this.type = type;
+        this.position = position;
+        this.scale = scale;
+        this.animationState = animationState;
+        this.blocking = blocking;
+        this.colliding = colliding;
+        this.direction = direction;
+        this.speed = multiplyExact(speed, scale);
+        this.behavior = Optional.ofNullable(behavior);
+        this.images = images;
+        this.size = getSizeFromImageDimensions(animationState, direction, images);
     }
 
-    @Override
-    public void act() {
-        if (behavior != null) {
-            behavior.execute(this);
-        };
-    }
-
-    @Override
-    public void act(Behavior behavior) {
-        if (behavior != null) {
-            behavior.execute(this);
-        }
+    private Dimension<Integer> getSizeFromImageDimensions(AnimationState animationState, Direction direction, Map<String, Image> images) {
+        final Image img = ImageUtil.getImage(animationState, direction, images);
+        return new Dimension<>(img.getWidth(null), img.getHeight(null));
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(location, size);
-    }
-
-    public Direction getDirection() {
-        return this.direction;
-    }
-
-    public Point getDLocation() {
-        return this.dLocation;
-    }
-
-    public Image getImage() {
-        final String key = animationState + "_" + direction;
-        return (images != null && images.size() > 0) ? images.get(key) : image;
-    }
-
-    public Point getLocation() {
-        return this.location;
-    }
-
-    public Dimension getSize() {
-        return this.size;
-    }
-
-    public int getSpeed() {
-        return this.speed * scale;
-    }
-
-    public boolean isBlocking() {
-        return blocking;
-    }
-
-    public void isBlocking(boolean blocking) {
-        this.blocking = blocking;
-    }
-
-    public boolean isColliding() {
-        return colliding;
-    }
-
-    public void isColliding(boolean colliding) {
-        this.colliding = colliding;
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void isVisible(boolean visible) {
-        this.visible = visible;
-    }
-
-    public Image resize(int factor, BufferedImage originalImage) {
-        return originalImage.getScaledInstance(factor * originalImage.getWidth(null), factor * originalImage.getHeight(null), BufferedImage.SCALE_SMOOTH);
-    }
-
-    public void setAnimationState(AnimationState animationState) {
-        this.animationState = animationState;
-    }
-
-    public void setBehavior(Behavior behavior) {
-        this.behavior = behavior;
-    }
-
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
-
-    public void setImage(String imageFilename) {
-        image = loadImage(imageFilename);
-        getImageDimensions();
-    }
-
-    public void setImages(Map<String, String> imageMap) {
-        images = new HashMap<>();
-        for (Map.Entry<String, String> entry: imageMap.entrySet()) {
-            final Image image = loadImage(entry.getValue());
-            images.put(entry.getKey(), image);
-        }
-        getImageDimensions();
-    }
-
-    private Image loadImage(String imageName) {
-        try {
-            BufferedImage originalImage = ImageIO.read(new File(getClass().getResource(imageName).toURI()));
-            return resize(this.scale, originalImage);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to load image: " + imageName);
-        }
-    }
-
-    protected void getImageDimensions() {
-        final String key = animationState + "_" + direction;
-        final Image img = (images != null && images.size() > 0) ? images.get(key) : image;
-        size.setSize(img.getWidth(null), img.getHeight(null));
-    }
-
-    public void setScale(int factor) {
-        this.scale = factor;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
+        return new Rectangle(position.x, position.y, size.width, size.height);
     }
 }

@@ -3,7 +3,7 @@ package se.chriskevin.mysterymaze.geometry;
 import java.io.Serializable;
 
 /**
- * Created by chsu7648 on 2017-06-12.
+ * Created by Chris Sundberg on 2017-06-12.
  */
 public final class Point3D implements Serializable {
     public final Integer x;
@@ -29,6 +29,10 @@ public final class Point3D implements Serializable {
             return (((Point3D)other).x.equals(this.x) && ((Point3D)other).y.equals(this.y) && ((Point3D)other).z.equals(this.z));
         }
         return false;
+    }
+
+    public int hashCode() {
+        return 0;
     }
 
     public String toString() {

@@ -4,11 +4,11 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * Created by CHSU7648 on 2016-03-28.
+ * Created by Chris Sundberg on 2016-03-28.
  */
 public class ImageSequence {
 
-    private int index;
+    private Integer index;
 
     private List<Image> sequence;
 

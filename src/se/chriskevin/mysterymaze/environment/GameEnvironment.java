@@ -1,42 +1,30 @@
 package se.chriskevin.mysterymaze.environment;
 
 import se.chriskevin.mysterymaze.BoardGenerator;
-import se.chriskevin.mysterymaze.behavior.MoveBehavior;
-import se.chriskevin.mysterymaze.collision.CollisionHandler;
-import se.chriskevin.mysterymaze.environment.utils.GameCharacterFactory;
+import se.chriskevin.mysterymaze.geometry.Dimension;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-import javax.swing.*;
+import static java.lang.Math.multiplyExact;
 
 public class GameEnvironment {
 
-    private static final int TILE_WIDTH = 32;
+    private final static int TILE_WIDTH = 32;
+    private final static int ZOOM_FACTOR = 2;
 
-    private Dimension dimension;
-
-    private Map<String, List<GameSprite>> sprites;
-
-    private int zoomFactor = 2;
+    public final Dimension size;
+    public final List<GameSprite> sprites;
 
     public GameEnvironment() {
         final Optional<List<String>> mapData = BoardGenerator.parseLevelFile("/levels/level1.txt");
+
         if (mapData.isPresent()) {
-            dimension = new Dimension((mapData.get().get(0).split("|").length * TILE_WIDTH), (mapData.get().size() * TILE_WIDTH));
-            sprites = BoardGenerator.createLevel(mapData.get(), TILE_WIDTH, zoomFactor);
+            this.size = new Dimension(multiplyExact(mapData.get().get(0).split("|").length, TILE_WIDTH), multiplyExact(mapData.get().size(), TILE_WIDTH));
+            this.sprites = BoardGenerator.createLevel(mapData.get(), TILE_WIDTH, ZOOM_FACTOR);
         } else {
-            dimension = new Dimension(0, 0);
-            sprites = new HashMap<>();
+            this.size = new Dimension(0, 0);
+            this.sprites = new ArrayList<>();
         }
-    }
-
-    public Dimension getDimension() {
-        return dimension;
-    }
-
-    public Map<String, List<GameSprite>> getSprites() {
-        return sprites;
     }
 }
