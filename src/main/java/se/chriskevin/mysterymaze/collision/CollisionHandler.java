@@ -1,17 +1,12 @@
 package se.chriskevin.mysterymaze.collision;
 
-import com.google.common.base.Supplier;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.vavr.Function2;
-import io.vavr.Tuple2;
+import io.vavr.collection.List;
 import se.chriskevin.mysterymaze.behavior.MoveBehavior;
 import se.chriskevin.mysterymaze.environment.GameSprite;
 import se.chriskevin.mysterymaze.environment.SpriteType;
 
-import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static se.chriskevin.mysterymaze.environment.utils.GameSpriteUtil.getByType;
 import static se.chriskevin.mysterymaze.environment.utils.GameSpriteUtil.getPlayer;
@@ -29,11 +24,10 @@ public final class CollisionHandler {
 
     public static final Consumer<List<GameSprite>> setCollisions = sprites -> {
         getByType.apply(SpriteType.TILE, sprites)
-            .stream()
             .filter(x -> x.blocking)
             .forEach(tile -> {
                 checkAndHandleCollision.apply(getPlayer.apply(sprites)).apply(tile);
-                getByType.apply(SpriteType.ENEMY).apply(sprites).map(checkAndHandleCollision.apply(tile));
+                getByType.apply(SpriteType.ENEMY, sprites).map(checkAndHandleCollision.apply(tile));
             });
 
         // Enemy checks
@@ -50,5 +44,6 @@ public final class CollisionHandler {
                 a.colliding = isColliding.apply(a).apply(b);
                 b.colliding = isColliding.apply(a).apply(b);
             }
+            return true;
         };
 }

@@ -1,9 +1,8 @@
 package se.chriskevin.mysterymaze;
 
-import com.google.common.base.Function;
-import com.google.common.base.Supplier;
+import io.vavr.Function0;
+import io.vavr.Function1;
 import se.chriskevin.mysterymaze.environment.GameEnvironment;
-import se.chriskevin.mysterymaze.geometry.Dimension;
 import se.chriskevin.mysterymaze.ui.GameView;
 
 import javax.swing.JFrame;
@@ -13,6 +12,7 @@ import java.awt.image.BufferedImage;
 import static se.chriskevin.mysterymaze.BoardGenerator.parseLevelFile;
 import static se.chriskevin.mysterymaze.GameEngine.createEngine;
 import static se.chriskevin.mysterymaze.environment.GameEnvironment.createEnvironment;
+import static se.chriskevin.mysterymaze.geometry.Dimension.dimension;
 import static se.chriskevin.mysterymaze.ui.GameView.createView;
 
 /**
@@ -21,7 +21,7 @@ import static se.chriskevin.mysterymaze.ui.GameView.createView;
  */
 public class Game extends JFrame {
 
-    public static final Supplier<Game> createGame = () -> new Game();
+    public static final Function0<Game> game = () -> new Game();
 
     public Game() {
         initUI();
@@ -38,38 +38,35 @@ public class Game extends JFrame {
         setLocationRelativeTo(null);
         hideCursor();
 
-        final GameEnvironment environment = createEnvironment.compose(parseLevelFile)
-            .apply("/levels/level1.txt");
+        final GameEnvironment environment = createEnvironment.compose(parseLevelFile).apply("/levels/level1.txt");
 
         final GameView view = createView
-            .apply(new Dimension(this.getSize().width, this.getSize().height))
-            .apply(environment);
+            .apply(dimension.apply(
+                Long.valueOf(this.getSize().width),
+                Long.valueOf(this.getSize().height)
+            ), environment);
 
-        final GameEngine engine = createEngine
-            .apply(view)
-            .apply(environment);
+        final GameEngine engine = createEngine.apply(view, environment);
 
         view.setEngine(engine);
 
         setContentPane(view);
     }
 
-    private Supplier<BufferedImage> createBlankCursorImage =
+    private Function0<BufferedImage> blankCursorImage =
         () -> new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
 
-    private Function<BufferedImage, Cursor> createCustomCursor =
+    private Function1<BufferedImage, Cursor> customCursor =
         image -> Toolkit.getDefaultToolkit().createCustomCursor(image, new Point(0, 0), "blank cursor");
 
     private void hideCursor() {
         // Set the blank cursor to the JFrame.
-        getContentPane().setCursor(createCustomCursor.apply(createBlankCursorImage.get()));
+        getContentPane().setCursor(customCursor.apply(blankCursorImage.apply()));
     }
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
-            createGame
-                .get()
-                .setVisible(true);
+            game.apply().setVisible(true);
         });
     }
 }

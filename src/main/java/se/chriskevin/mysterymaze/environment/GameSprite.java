@@ -1,6 +1,7 @@
 package se.chriskevin.mysterymaze.environment;
 
-import io.vavr.Function3;
+import io.vavr.collection.Map;
+import io.vavr.control.Option;
 import se.chriskevin.mysterymaze.animation.AnimationState;
 import se.chriskevin.mysterymaze.animation.Direction;
 import se.chriskevin.mysterymaze.behavior.Behavior;
@@ -8,13 +9,8 @@ import se.chriskevin.mysterymaze.geometry.Dimension;
 import se.chriskevin.mysterymaze.geometry.Point3D;
 
 import java.awt.*;
-import java.util.Map;
-import java.util.Optional;
 
 import static java.lang.Math.multiplyExact;
-import static se.chriskevin.mysterymaze.environment.ImageUtil.getImage;
-import static se.chriskevin.mysterymaze.environment.ImageUtil.imageMapKey;
-import static se.chriskevin.mysterymaze.geometry.Dimension.ZERO_DIMENSION;
 
 /**
  * Created by Chris Sundberg on 2016-03-12.
@@ -25,7 +21,7 @@ public class GameSprite {
     public Boolean colliding;
 
     public final AnimationState animationState;
-    public final Optional<Behavior> behavior;
+    public final Option<Behavior> behavior;
     public final Direction direction;
     public final Map<String, Image> images;
     public final Point3D position;
@@ -44,7 +40,8 @@ public class GameSprite {
         Boolean colliding,
         Behavior behavior,
         Map<String, Image> images,
-        AnimationState animationState
+        AnimationState animationState,
+        Dimension size
     ) {
         this.type = type;
         this.position = position;
@@ -54,16 +51,10 @@ public class GameSprite {
         this.colliding = colliding;
         this.direction = direction;
         this.speed = multiplyExact(speed, scale);
-        this.behavior = Optional.ofNullable(behavior);
+        this.behavior = Option.of(behavior);
         this.images = images;
-        this.size = getSizeFromImageDimensions.apply(animationState).apply(direction).apply(images);
+        this.size = size;
     }
-
-    private static Function3<AnimationState, Direction, Map<String, Image>, Dimension> getSizeFromImageDimensions =
-        (animationState, direction, images) ->
-            Optional.ofNullable(getImage.apply(imageMapKey.apply(animationState, direction), images))
-                .map(x -> new Dimension(Long.valueOf(x.getWidth(null)), Long.valueOf(x.getHeight(null))))
-                .orElse(ZERO_DIMENSION);
 
     public Rectangle getBounds() {
         return new Rectangle(position.x.intValue(), position.y.intValue(), size.width.intValue(), size.height.intValue());

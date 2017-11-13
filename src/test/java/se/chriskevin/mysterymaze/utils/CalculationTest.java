@@ -13,16 +13,16 @@ public class CalculationTest {
 
     @Test
     public void verifyAdd() {
-        assertEquals(add.apply(5L, 5L), 10L);
+        assertEquals(add.apply(5L, 5L).longValue(), 10L);
     }
 
     @Test
     public void verifySubtract() {
-        assertEquals(subtract.apply(5L, 5L), 10L);
+        assertEquals(subtract.apply(15L, 5L).longValue(), 10L);
     }
 
     @Test
     public void verifyHalf() {
-        assertEquals(half.apply(10L), 5L);
+        assertEquals(half.apply(10L).longValue(), 5L);
     }
 }

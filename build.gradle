@@ -1,4 +1,5 @@
 apply plugin: 'idea'
+apply plugin: 'jacoco'
 apply plugin: 'java'
 
 repositories {
@@ -7,8 +8,20 @@ repositories {
 
 dependencies {
     compile 'com.aol.simplereact:cyclops-react:1.0.5'
-    compile 'com.google.guava:guava:23.2-jre'
     compile 'io.reactivex:rxjava:1.1.6'
     compile 'io.vavr:vavr:0.9.0'
     compile 'junit:junit:4.12'
+}
+
+jacoco {
+    toolVersion = "0.7.9"
+    reportsDir = file("$buildDir/customJacocoReportDir")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
 }

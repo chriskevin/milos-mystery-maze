@@ -1,6 +1,8 @@
 package se.chriskevin.mysterymaze.ui;
 
 import io.vavr.Function2;
+import io.vavr.collection.HashMap;
+import io.vavr.collection.Map;
 import se.chriskevin.mysterymaze.GameEngine;
 import se.chriskevin.mysterymaze.behavior.Behavior;
 import se.chriskevin.mysterymaze.behavior.MoveBehavior;
@@ -15,13 +17,7 @@ import se.chriskevin.mysterymaze.utils.CLI;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
-import static java.lang.Math.addExact;
-import static java.util.stream.Collectors.toList;
 import static se.chriskevin.mysterymaze.environment.ImageUtil.getImage;
 import static se.chriskevin.mysterymaze.environment.ImageUtil.imageMapKey;
 import static se.chriskevin.mysterymaze.environment.utils.GameSpriteUtil.getByType;
@@ -34,22 +30,19 @@ import static se.chriskevin.mysterymaze.utils.Calculation.add;
 public class GameView extends JPanel {
 
     // Move this
-    private Map<Integer, Behavior> keyMapStop;
-    {
-        keyMapStop = new HashMap<>();
-        keyMapStop.put(KeyEvent.VK_DOWN, StopBehavior.STOP_DOWN);
-        keyMapStop.put(KeyEvent.VK_LEFT, StopBehavior.STOP_LEFT);
-        keyMapStop.put(KeyEvent.VK_RIGHT, StopBehavior.STOP_RIGHT);
-        keyMapStop.put(KeyEvent.VK_UP, StopBehavior.STOP_UP);
-    }
-    private Map<Integer, Behavior> keyMapMove;
-    {
-        keyMapMove = new HashMap<>();
-        keyMapMove.put(KeyEvent.VK_DOWN, MoveBehavior.MOVE_DOWN);
-        keyMapMove.put(KeyEvent.VK_LEFT, MoveBehavior.MOVE_LEFT);
-        keyMapMove.put(KeyEvent.VK_RIGHT, MoveBehavior.MOVE_RIGHT);
-        keyMapMove.put(KeyEvent.VK_UP, MoveBehavior.MOVE_UP);
-    }
+    private Map<Integer, Behavior> keyMapStop = HashMap.of(
+        KeyEvent.VK_DOWN, StopBehavior.STOP_DOWN,
+        KeyEvent.VK_LEFT, StopBehavior.STOP_LEFT,
+        KeyEvent.VK_RIGHT, StopBehavior.STOP_RIGHT,
+        KeyEvent.VK_UP, StopBehavior.STOP_UP
+    );
+
+    private Map<Integer, Behavior> keyMapMove = HashMap.of(
+        KeyEvent.VK_DOWN, MoveBehavior.MOVE_DOWN,
+        KeyEvent.VK_LEFT, MoveBehavior.MOVE_LEFT,
+        KeyEvent.VK_RIGHT, MoveBehavior.MOVE_RIGHT,
+        KeyEvent.VK_UP, MoveBehavior.MOVE_UP
+    );
 
     private CLI cli;
     private Boolean inputEnabled;
@@ -176,7 +169,8 @@ public class GameView extends JPanel {
                 engine.togglePaused();
             } else {
                 if (!engine.isPaused()) {
-                    keyMapStop.get(e.getKeyCode()).execute(getPlayer.apply(environment.sprites));
+                    keyMapStop.get(e.getKeyCode())
+                        .map(x -> x.execute(getPlayer.apply(environment.sprites)));
                 }
             }
         }
@@ -184,7 +178,8 @@ public class GameView extends JPanel {
         @Override
         public void keyPressed(KeyEvent e) {
             if (!engine.isPaused()) {
-                keyMapMove.get(e.getKeyCode()).execute(getPlayer.apply(environment.sprites));
+                keyMapMove.get(e.getKeyCode())
+                    .map(x -> x.execute(getPlayer.apply(environment.sprites)));
             }
         }
     }

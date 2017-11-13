@@ -1,19 +1,19 @@
 package se.chriskevin.mysterymaze.ui;
 
 import io.vavr.Function2;
+import io.vavr.collection.List;
 import se.chriskevin.mysterymaze.environment.GameSprite;
 import se.chriskevin.mysterymaze.geometry.Dimension;
 import se.chriskevin.mysterymaze.geometry.Point3D;
 
 import java.awt.*;
-import java.util.List;
 
 import static java.lang.Math.addExact;
 import static java.lang.Math.subtractExact;
-import static java.util.stream.Collectors.toList;
 import static se.chriskevin.mysterymaze.environment.ImageUtil.getImage;
 import static se.chriskevin.mysterymaze.environment.ImageUtil.imageMapKey;
 import static se.chriskevin.mysterymaze.environment.utils.GameSpriteUtil.getPlayer;
+import static se.chriskevin.mysterymaze.geometry.Point3D.point3D;
 import static se.chriskevin.mysterymaze.utils.Calculation.half;
 import static se.chriskevin.mysterymaze.ui.GameView.drawCollisionZone;
 import static se.chriskevin.mysterymaze.ui.GameView.renderSprite;
@@ -32,7 +32,7 @@ public final class Camera {
         final Long targetX = adjustCoordinateBoundary(half.apply(viewAreaSize.width) - half.apply(viewAreaSize.width), target.position.x, viewAreaSize.width, environmentSize.width);
         final Long targetY = adjustCoordinateBoundary(half.apply(viewAreaSize.height) - half.apply(target.size.height), target.position.y, viewAreaSize.height, environmentSize.height);
 
-        final Point3D offsetP = new Point3D(subtract.apply(targetX, target.position.x), subtract.apply(targetY, target.position.y), 0L);
+        final Point3D offsetP = point3D.apply(subtract.apply(targetX, target.position.x), subtract.apply(targetY, target.position.y), 0L);
 
         final Long viewAreaX = target.position.x - half.apply(viewAreaSize.width) - target.size.width;
         final Long viewAreaY = target.position.y - half.apply(viewAreaSize.height) - target.size.height;
@@ -40,13 +40,12 @@ public final class Camera {
 
         // All drawing should be moved to gameview
         // Sort list so that tiles list comes first
-        getVisibleSprites.apply(sprites).apply(viewArea)
-            .stream()
+        getVisibleSprites.apply(sprites, viewArea)
             .filter(x -> !x.equals(target))
             .forEach(x -> renderSprite(g, gameView, offsetP, x));
 
         if (target.colliding) {
-            final Point3D collisionZoneLocation = new Point3D(addExact(target.position.x, offsetP.x), addExact(target.position.y, offsetP.y), 0L);
+            final Point3D collisionZoneLocation = point3D.apply(addExact(target.position.x, offsetP.x), addExact(target.position.y, offsetP.y), 0L);
             drawCollisionZone(g, new Rectangle(collisionZoneLocation.x.intValue(), collisionZoneLocation.y.intValue(), target.size.width.intValue(), target.size.height.intValue()));
         }
 
@@ -59,5 +58,5 @@ public final class Camera {
     }
 
     public static final Function2<List<GameSprite>, Rectangle, List<GameSprite>> getVisibleSprites =
-        (sprites, viewArea) -> sprites.stream().filter(x -> x.getBounds().intersects(viewArea)).collect(toList());
+        (sprites, viewArea) -> sprites.filter(x -> x.getBounds().intersects(viewArea));
 }

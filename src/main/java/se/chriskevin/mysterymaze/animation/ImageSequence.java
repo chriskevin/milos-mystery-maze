@@ -1,7 +1,9 @@
 package se.chriskevin.mysterymaze.animation;
 
-import java.awt.*;
-import java.util.List;
+
+import io.vavr.collection.List;
+
+import java.awt.Image;
 
 /**
  * Created by Chris Sundberg on 2016-03-28.

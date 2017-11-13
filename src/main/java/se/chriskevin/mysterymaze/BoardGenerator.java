@@ -1,22 +1,22 @@
 package se.chriskevin.mysterymaze;
 
+import io.vavr.Function1;
 import io.vavr.Function2;
 import io.vavr.Function3;
+import io.vavr.collection.List;
 import io.vavr.control.Try;
 import se.chriskevin.mysterymaze.environment.GameSprite;
 import se.chriskevin.mysterymaze.geometry.Point3D;
 
 import java.io.InputStream;
-import java.util.*;
-import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 import static se.chriskevin.mysterymaze.environment.utils.GameCharacterFactory.*;
 import static se.chriskevin.mysterymaze.geometry.Point3D.ZERO_POINT3D;
+import static se.chriskevin.mysterymaze.geometry.Point3D.point3D;
 import static se.chriskevin.mysterymaze.geometry.Point3D.translate;
 import static se.chriskevin.mysterymaze.utils.Calculation.add;
 import static se.chriskevin.mysterymaze.utils.Calculation.subtract;
@@ -30,31 +30,28 @@ public final class BoardGenerator {
     final static String IMAGE_PATH = "/images/";
     final static String TILE_PATH = IMAGE_PATH + "/tiles/";
 
-    public static final Function<String, Optional<List<String>>> parseLevelFile =
+    public static final Function1<String, List<String>> parseLevelFile =
         filename -> {
         final InputStream resourceAsStream = BoardGenerator.class.getResourceAsStream(filename);
         final Scanner sc = new Scanner(resourceAsStream);
 
         return Try.of(() -> {
-                final List<String> mapData = new ArrayList<>();
-                sc.forEachRemaining(mapData::add);
-                return Optional.of(mapData);
+                final List<String> mapData = List.empty();
+                sc.forEachRemaining(mapData::push);
+                return mapData;
             })
             .andFinally(() -> sc.close())
-            .getOrElse(Optional.empty());
+            .getOrElse(List::empty);
     };
 
-    public static final Function3<Long, Long, Collection<String>, List<GameSprite>> createLevel =
+    public static final Function3<Long, Long, List<String>, List<GameSprite>> createLevel =
         (scale, tileWidth, mapData) -> {
             AtomicInteger rowNo = new AtomicInteger(-1);
             return mapData
-                    .stream()
-                    .map(row -> {
+                    .flatMap(row -> {
                         System.out.println(row);
-                        return createSprites(row, Long.valueOf(rowNo.incrementAndGet()),0L, tileWidth, scale, ZERO_POINT3D, new ArrayList<>());
-                    })
-                    .flatMap(List::stream)
-                    .collect(toList());
+                        return createSprites(row, Long.valueOf(rowNo.incrementAndGet()),0L, tileWidth, scale, ZERO_POINT3D, List.empty());
+                    });
         };
 
     public static List<GameSprite> createSprites(String row, Long rowNo, Long count, Long tileWidth, Long scale, Point3D currentLocation, List<GameSprite> sprites) {
@@ -89,35 +86,23 @@ public final class BoardGenerator {
             case 'e':
             case 'f':
             case 'w':
-                return Stream.concat(
-                    sprites.stream(),
-                    asList(createTile(scale, currentLocation, false, createTileImagePath.apply(type, typeId))).stream()
-                )
-                .collect(toList());
+                return sprites.push(createTile(scale, currentLocation, false, createTileImagePath.apply(type, typeId)));
             case 'h':
-                return Stream.concat(
-                    sprites.stream(),
-                    Stream.concat(
-                        asList(createTile(scale, currentLocation, false, createTileImagePath.apply(type, typeId))).stream(),
-                        asList(createHero(scale, new Point3D(currentLocation.x, subtract.apply(currentLocation.y, 14L), 0L))).stream()
-                    )
-                )
-                .collect(toList());
+                return sprites
+                        .push(createTile(scale, currentLocation, false, createTileImagePath.apply(type, typeId)))
+                        .push(createHero(scale, point3D.apply(currentLocation.x, subtract.apply(currentLocation.y, 14L), 0L)));
             case 'm':
-                sprites.add(createTile(scale, currentLocation, false, createTileImagePath.apply(type, typeId)));
+                sprites
+                    .push(createTile(scale, currentLocation, false, createTileImagePath.apply(type, typeId)));
                 Optional<GameSprite> sprite = createEnemy(Long.valueOf(typeId - '0'), currentLocation, scale);
                 if (sprite.isPresent()) {
-                    sprites.add(sprite.get());
+                    sprites.push(sprite.get());
                 }
                 return sprites;
             case 't':
-                return Stream.concat(
-                    sprites.stream(),
-                    asList(createTile(scale, currentLocation, true, createTileImagePath.apply(type, typeId))).stream()
-                )
-                .collect(toList());
+                return sprites.push(createTile(scale, currentLocation, true, createTileImagePath.apply(type, typeId)));
             default:
-                return new ArrayList<>();
+                return List.empty();
         }
     }
 

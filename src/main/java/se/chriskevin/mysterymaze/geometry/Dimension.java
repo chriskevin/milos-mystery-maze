@@ -1,19 +1,24 @@
 package se.chriskevin.mysterymaze.geometry;
 
+import io.vavr.Function2;
+
 import java.io.Serializable;
 
 /**
  * Created by Chris Sundberg on 2017-06-12.
  */
-public final class Dimension<T extends Number> implements Serializable {
+public final class Dimension implements Serializable {
     public final Long height;
     public final Long width;
 
-    public static final Dimension ZERO_DIMENSION = new Dimension(0L, 0L);
+    public static final Function2<Long, Long, Dimension> dimension =
+        (w, h) -> new Dimension(w, h);
 
-    public Dimension(Long width, Long height) {
-        this.height = height;
-        this.width = width;
+    public static final Dimension ZERO_DIMENSION = dimension.apply(0L, 0L);
+
+    private Dimension(Long w, Long h) {
+        this.height = h;
+        this.width = w;
     }
 
     public boolean equals(Object other) {

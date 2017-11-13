@@ -1,7 +1,6 @@
 package se.chriskevin.mysterymaze;
 
 import io.vavr.Function2;
-import se.chriskevin.mysterymaze.collision.CollisionHandler;
 import se.chriskevin.mysterymaze.environment.GameEnvironment;
 import se.chriskevin.mysterymaze.environment.GameSprite;
 import se.chriskevin.mysterymaze.ui.GameView;
@@ -9,7 +8,6 @@ import se.chriskevin.mysterymaze.ui.GameView;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.function.Function;
 
 /**
  * Created by Chris Sundberg on 2016-03-29.
@@ -46,7 +44,7 @@ public class GameEngine implements ActionListener {
     }
 
     public static void act(GameSprite sprite) {
-        sprite.behavior.ifPresent((b) -> b.execute(sprite));
+        sprite.behavior.toJavaOptional().ifPresent((b) -> b.execute(sprite));
     }
 
     public boolean isPaused() {

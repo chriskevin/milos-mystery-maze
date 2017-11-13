@@ -1,6 +1,7 @@
 package se.chriskevin.mysterymaze.geometry;
 
 import io.vavr.Function2;
+import io.vavr.Function3;
 import io.vavr.Function4;
 
 import java.io.Serializable;
@@ -16,34 +17,37 @@ public final class Point3D implements Serializable {
     public final Long y;
     public final Long z;
 
-    public static final Point3D ZERO_POINT3D = new Point3D(0L, 0L, 0L);
+    public static final Function3<Long, Long, Long, Point3D> point3D =
+        (x, y, z) -> new Point3D(x, y, z);
+
+    public static final Point3D ZERO_POINT3D = point3D.apply(0L, 0L, 0L);
 
     public static final Function2<Long, Point3D, Point3D> moveX =
-        (x, point) -> new Point3D(x, point.y, point.z);
+        (x, point) -> point3D.apply(x, point.y, point.z);
 
     public static final Function2<Long, Point3D, Point3D> moveY =
-        (y, point) -> new Point3D(point.x, y, point.z);
+        (y, point) -> point3D.apply(point.x, y, point.z);
 
     public static final Function2<Long, Point3D, Point3D> moveZ =
-        (z, point) -> new Point3D(point.x, point.y, z);
+        (z, point) -> point3D.apply(point.x, point.y, z);
 
     public static final Function4<Long, Long, Long, Point3D, Point3D> move =
-        (x, y, z, point) -> new Point3D(point.x, point.y, point.z);
+        (x, y, z, point) -> point3D.apply(x, y, z);
 
     public static final Function2<Long, Point3D, Point3D> translateX =
-        (x, point) -> new Point3D(add.apply(point.x, x), point.y, point.z);
+        (x, point) -> point3D.apply(add.apply(point.x, x), point.y, point.z);
 
     public static final Function2<Long, Point3D, Point3D> translateY =
-        (y, point) -> new Point3D(point.x, add.apply(point.y, y), point.z);
+        (y, point) -> point3D.apply(point.x, add.apply(point.y, y), point.z);
 
     public static final Function2<Long, Point3D, Point3D> translateZ =
-        (z, point) -> new Point3D(point.x, point.y, add.apply(point.z, z));
+        (z, point) -> point3D.apply(point.x, point.y, add.apply(point.z, z));
 
     public static final Function4<Long, Long, Long, Point3D, Point3D> translate =
-        (x, y, z, point) -> new Point3D(add.apply(point.x, x), add.apply(point.y, y), add.apply(point.z, z));
+        (x, y, z, point) -> point3D.apply(add.apply(point.x, x), add.apply(point.y, y), add.apply(point.z, z));
 
 
-    public Point3D(Long x, Long y, Long z) {
+    private Point3D(Long x, Long y, Long z) {
         this.x = x;
         this.y = y;
         this.z = z;
