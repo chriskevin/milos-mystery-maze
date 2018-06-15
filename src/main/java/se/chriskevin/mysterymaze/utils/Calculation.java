@@ -4,9 +4,6 @@ import io.vavr.Function2;
 
 import java.util.function.Function;
 
-/**
- * Created by Chris Sundberg on 2017-07-29.
- */
 public final class Calculation {
 
     public static final Function2<Long, Long, Long> add = (x, y) -> x + y;

@@ -5,11 +5,6 @@ import se.chriskevin.mysterymaze.animation.Direction;
 import se.chriskevin.mysterymaze.environment.GameSprite;
 import se.chriskevin.mysterymaze.geometry.Point3D;
 
-import static se.chriskevin.mysterymaze.geometry.Point3D.point3D;
-
-/**
- * Created by Chris Sundberg on 2016-03-14.
- */
 public enum StopBehavior implements Behavior {
 
     STOP_DOWN() {
@@ -49,6 +44,6 @@ public enum StopBehavior implements Behavior {
     }
 
     private static GameSprite stop(GameSprite sprite, Long x, Long y, Direction direction) {
-        return new GameSprite(sprite.type, sprite.scale, sprite.blocking, point3D.apply(x, y, 0L), sprite.speed, direction, sprite.colliding, sprite.behavior.get(), sprite.images, AnimationState.STOPPED, sprite.size);
+        return GameSprite.of(sprite.type, sprite.scale, sprite.blocking, Point3D.of(x, y, 0L), sprite.speed, direction, sprite.colliding, sprite.behavior.get(), sprite.images, AnimationState.STOPPED, sprite.size);
     }
 }

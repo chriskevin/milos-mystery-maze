@@ -108,7 +108,7 @@ public class SoundPlayer extends Thread {
      * and writes it to the soundcard via a bit stream.
      */
     public void run() {
-        final File soundFile = new File(filename);
+        var soundFile = new File(filename);
 
         if (!soundFile.exists()) {
             System.err.println("Wave file not found: " + filename);
@@ -124,8 +124,8 @@ public class SoundPlayer extends Thread {
             throw new RuntimeException(e);
         }
 
-        final AudioFormat format = audioInputStream.getFormat();
-        final DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+        var format = audioInputStream.getFormat();
+        var info = new DataLine.Info(SourceDataLine.class, format);
 
         try {
             channel = (SourceDataLine) AudioSystem.getLine(info);
@@ -137,7 +137,7 @@ public class SoundPlayer extends Thread {
         }
 
         if (channel.isControlSupported(FloatControl.Type.PAN)) {
-            final FloatControl pan = (FloatControl) channel.getControl(FloatControl.Type.PAN);
+            var pan = (FloatControl) channel.getControl(FloatControl.Type.PAN);
             if (curPosition == Position.RIGHT) {
                 pan.setValue(1.0f);
             } else if (curPosition == Position.LEFT) {
@@ -146,8 +146,8 @@ public class SoundPlayer extends Thread {
         }
 
         channel.start();
-        int nBytesRead = 0;
-        byte[] abData = new byte[EXTERNAL_BUFFER_SIZE];
+        var nBytesRead = 0;
+        var abData = new byte[EXTERNAL_BUFFER_SIZE];
 
         try {
             while (nBytesRead != -1) {

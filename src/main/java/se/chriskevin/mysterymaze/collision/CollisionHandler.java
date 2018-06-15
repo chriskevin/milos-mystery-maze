@@ -11,9 +11,6 @@ import java.util.function.Consumer;
 import static se.chriskevin.mysterymaze.environment.utils.GameSpriteUtil.getByType;
 import static se.chriskevin.mysterymaze.environment.utils.GameSpriteUtil.getPlayer;
 
-/**
- * Created by Chris Sundberg on 2017-06-11.
- */
 public final class CollisionHandler {
 
     public static final Function2<GameSprite, GameSprite, Boolean> isColliding =

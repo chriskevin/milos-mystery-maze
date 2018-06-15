@@ -8,37 +8,30 @@ import io.vavr.control.Try;
 import se.chriskevin.mysterymaze.environment.GameSprite;
 import se.chriskevin.mysterymaze.geometry.Point3D;
 
-import java.io.InputStream;
-import java.util.Optional;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 
 import static se.chriskevin.mysterymaze.environment.utils.GameCharacterFactory.*;
 import static se.chriskevin.mysterymaze.geometry.Point3D.ZERO_POINT3D;
-import static se.chriskevin.mysterymaze.geometry.Point3D.point3D;
 import static se.chriskevin.mysterymaze.geometry.Point3D.translate;
 import static se.chriskevin.mysterymaze.utils.Calculation.add;
 import static se.chriskevin.mysterymaze.utils.Calculation.subtract;
 import static se.chriskevin.mysterymaze.utils.Calculation.multiply;
 
-/**
- * Created by Chris Sundberg on 2016-03-08.
- */
 public final class BoardGenerator {
 
     final static String IMAGE_PATH = "/images/";
     final static String TILE_PATH = IMAGE_PATH + "/tiles/";
 
     public static final Function1<String, List<String>> parseLevelFile =
-        filename -> {
-        final InputStream resourceAsStream = BoardGenerator.class.getResourceAsStream(filename);
-        final Scanner sc = new Scanner(resourceAsStream);
+        (filename) -> {
+        var resourceAsStream = BoardGenerator.class.getResourceAsStream(filename);
+        var sc = new Scanner(resourceAsStream);
 
-        return Try.of(() -> {
-                final List<String> mapData = List.empty();
-                sc.forEachRemaining(mapData::push);
-                return mapData;
+            return Try.of(() -> {
+                final java.util.List<String> mapData = new java.util.ArrayList<>();
+                sc.forEachRemaining(mapData::add);
+                return List.ofAll(mapData);
             })
             .andFinally(() -> sc.close())
             .getOrElse(List::empty);
@@ -46,7 +39,7 @@ public final class BoardGenerator {
 
     public static final Function3<Long, Long, List<String>, List<GameSprite>> createLevel =
         (scale, tileWidth, mapData) -> {
-            AtomicInteger rowNo = new AtomicInteger(-1);
+            var rowNo = new AtomicInteger(-1);
             return mapData
                     .flatMap(row -> {
                         System.out.println(row);
@@ -56,8 +49,8 @@ public final class BoardGenerator {
 
     public static List<GameSprite> createSprites(String row, Long rowNo, Long count, Long tileWidth, Long scale, Point3D currentLocation, List<GameSprite> sprites) {
         if (count < row.length()) {
-            Character type = row.charAt(count.intValue());
-            Character typeId = row.charAt(add.apply(count, 1L).intValue());
+            var type = row.charAt(count.intValue());
+            var typeId = row.charAt(add.apply(count, 1L).intValue());
 
             sprites = createSprite(type, typeId, scale, currentLocation, sprites);
 
@@ -90,12 +83,12 @@ public final class BoardGenerator {
             case 'h':
                 return sprites
                         .push(createTile(scale, currentLocation, false, createTileImagePath.apply(type, typeId)))
-                        .push(createHero(scale, point3D.apply(currentLocation.x, subtract.apply(currentLocation.y, 14L), 0L)));
+                        .push(createHero(scale, Point3D.of(currentLocation.x, subtract.apply(currentLocation.y, 14L), 0L)));
             case 'm':
                 sprites
                     .push(createTile(scale, currentLocation, false, createTileImagePath.apply(type, typeId)));
-                Optional<GameSprite> sprite = createEnemy(Long.valueOf(typeId - '0'), currentLocation, scale);
-                if (sprite.isPresent()) {
+                var sprite = createEnemy(Long.valueOf(typeId - '0'), currentLocation, scale);
+                if (sprite.isDefined()) {
                     sprites.push(sprite.get());
                 }
                 return sprites;

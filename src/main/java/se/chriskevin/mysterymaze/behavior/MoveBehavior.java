@@ -14,16 +14,13 @@ import static se.chriskevin.mysterymaze.utils.Calculation.half;
 import static se.chriskevin.mysterymaze.utils.Calculation.subtract;
 import static se.chriskevin.mysterymaze.utils.Common.equals;
 
-/**
- * Created by Chris Sundberg on 2016-03-13.
- */
 public enum MoveBehavior implements Behavior {
 
     BOUNCE_BACK() {
         @Override
         public GameSprite execute(GameSprite sprite) {
-            final Point3D dl = sprite.position;
-            final Long halfSpeed = half.apply(sprite.speed);
+            var dl = sprite.position;
+            var halfSpeed = half.apply(sprite.speed);
 
             /*return Option.of(ZERO_POINT3D)
                 .map(tranformWhen.apply(equals.apply(Direction.DOWN, sprite.direction), translateY.apply(subtract.apply(dl.y, halfSpeed))))
@@ -99,6 +96,6 @@ public enum MoveBehavior implements Behavior {
     }
 
     private static GameSprite move(GameSprite sprite, Long x, Long y, Direction direction, StopBehavior stopBehavior) {
-        return new GameSprite(sprite.type, sprite.scale, sprite.blocking, translate.apply(Long.valueOf(x), Long.valueOf(y), 0L, sprite.position), sprite.speed, direction, sprite.colliding, sprite.behavior.get(), sprite.images, AnimationState.WALKING, sprite.size);
+        return GameSprite.of(sprite.type, sprite.scale, sprite.blocking, translate.apply(Long.valueOf(x), Long.valueOf(y), 0L, sprite.position), sprite.speed, direction, sprite.colliding, sprite.behavior.get(), sprite.images, AnimationState.WALKING, sprite.size);
     }
 }

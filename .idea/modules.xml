@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/git-milos-mystery-maze.iml" filepath="$PROJECT_DIR$/.idea/modules/git-milos-mystery-maze.iml" />
       <module fileurl="file://$PROJECT_DIR$/milos-mystery-maze.iml" filepath="$PROJECT_DIR$/milos-mystery-maze.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/milos-mystery-maze_main.iml" filepath="$PROJECT_DIR$/.idea/modules/milos-mystery-maze_main.iml" group="milos-mystery-maze" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/milos-mystery-maze_test.iml" filepath="$PROJECT_DIR$/.idea/modules/milos-mystery-maze_test.iml" group="milos-mystery-maze" />

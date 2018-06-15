@@ -12,6 +12,7 @@ import se.chriskevin.mysterymaze.environment.GameSprite;
 import se.chriskevin.mysterymaze.environment.SpriteType;
 import se.chriskevin.mysterymaze.geometry.Dimension;
 import se.chriskevin.mysterymaze.geometry.Point3D;
+import se.chriskevin.mysterymaze.utils.AWT;
 import se.chriskevin.mysterymaze.utils.CLI;
 
 import javax.swing.*;
@@ -24,10 +25,7 @@ import static se.chriskevin.mysterymaze.environment.utils.GameSpriteUtil.getByTy
 import static se.chriskevin.mysterymaze.environment.utils.GameSpriteUtil.getPlayer;
 import static se.chriskevin.mysterymaze.utils.Calculation.add;
 
-/**
- * Created by Chris Sundberg on 2016-03-29.
- */
-public class GameView extends JPanel {
+public final class GameView extends JPanel {
 
     // Move this
     private Map<Integer, Behavior> keyMapStop = HashMap.of(
@@ -51,7 +49,7 @@ public class GameView extends JPanel {
     private GameEnvironment environment;
 
     public static final Function2<Dimension, GameEnvironment, GameView> createView =
-        (dimension, environment) -> new GameView(dimension, environment);
+        (dimension, environment) -> of(dimension, environment);
 
 
     public GameView(Dimension dimension, GameEnvironment environment) {
@@ -61,15 +59,19 @@ public class GameView extends JPanel {
         addKeyListener(new TAdapter());
         setFocusable(true);
         setBackground(Color.BLACK);
-        setPreferredSize(new java.awt.Dimension(dimension.width.intValue(), dimension.height.intValue()));
+        setPreferredSize(AWT.Dimension.of(dimension));
         setDoubleBuffered(true);
 
         inputEnabled = true;
         cli = new CLI();
     }
 
+    public static final GameView of(Dimension dimension, GameEnvironment environment) {
+        return new GameView(dimension, environment);
+    }
+
     public static void renderSprite(Graphics g, GameView gameView, Point3D offsetP, GameSprite sprite) {
-        final Graphics2D g2d = (Graphics2D) g;
+        var g2d = (Graphics2D) g;
 
         if (sprite.colliding) {
             drawCollisionZone(g, new Rectangle(add.apply(sprite.position.x, offsetP.x).intValue(), add.apply(sprite.position.y, offsetP.y).intValue(), sprite.size.width.intValue(), sprite.size.height.intValue()));
@@ -78,7 +80,7 @@ public class GameView extends JPanel {
     }
 
     public static void drawCollisionZone(Graphics g, Rectangle bounds) {
-        final Color myColour = new Color(255, 0, 0, 128);
+        var myColour = new Color(255, 0, 0, 128);
         g.setColor(myColour);
         g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
     }
@@ -104,18 +106,18 @@ public class GameView extends JPanel {
     }
 
     private void doDrawing(Graphics g) {
-        final Color myColour = new Color(0, 0, 0, 128);
+        var myColour = new Color(0, 0, 0, 128);
         g.setColor(myColour);
         g.fillRect(0, 0, 1024, 100);
 
         g.setColor(Color.WHITE);
         g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
-        final String ingameMsg = !engine.isPaused() ? "Playing " : "Paused ";
-        final String levelMsg = " Level 1";
-        final String enemyMsg = " Enemies: " + getByType.apply(SpriteType.ENEMY).apply(environment.sprites).size();
-        final GameSprite player = getPlayer.apply(environment.sprites);
+        var ingameMsg = !engine.isPaused() ? "Playing " : "Paused ";
+        var levelMsg = " Level 1";
+        var enemyMsg = " Enemies: " + getByType.apply(SpriteType.ENEMY).apply(environment.sprites).size();
+        var player = getPlayer.apply(environment.sprites);
 
-        final String coordsMsg =
+        var coordsMsg =
             new StringBuilder()
                 .append(" X: ")
                 .append(player.position.x)
@@ -125,7 +127,7 @@ public class GameView extends JPanel {
                 .append(player.colliding)
                 .toString();
 
-        final String debugMsg =
+        var debugMsg =
             new StringBuilder()
                 .append(ingameMsg)
                 .append(levelMsg)
@@ -155,10 +157,10 @@ public class GameView extends JPanel {
 
             if (cli.isEnabled()) {
                 if (key >= 65 && key <= 90 || key.equals(KeyEvent.VK_SPACE)) {
-                    String currentCommand = cli.getCurrentCommand() + (char) key.intValue();
+                    var currentCommand = cli.getCurrentCommand() + (char) key.intValue();
                     cli.setCurrentCommand(currentCommand);
                 } else if (key.equals(KeyEvent.VK_BACK_SPACE)) {
-                    String currentCommand = cli.getCurrentCommand();
+                    var currentCommand = cli.getCurrentCommand();
                     cli.setCurrentCommand(currentCommand.substring(0, currentCommand.length() - 1));
                 } else if (key.equals(KeyEvent.VK_ENTER)) {
                     cli.run();

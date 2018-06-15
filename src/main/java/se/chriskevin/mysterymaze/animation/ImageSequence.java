@@ -5,9 +5,6 @@ import io.vavr.collection.List;
 
 import java.awt.Image;
 
-/**
- * Created by Chris Sundberg on 2016-03-28.
- */
 public class ImageSequence {
 
     private Integer index;

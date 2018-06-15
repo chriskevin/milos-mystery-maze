@@ -30,7 +30,7 @@ public class GameSprite {
     public final Long speed;
     public final SpriteType type;
 
-    public GameSprite(
+    private GameSprite(
         SpriteType type,
         Long scale,
         Boolean blocking,
@@ -54,6 +54,22 @@ public class GameSprite {
         this.behavior = Option.of(behavior);
         this.images = images;
         this.size = size;
+    }
+
+    public static final GameSprite of(
+        SpriteType type,
+        Long scale,
+        Boolean blocking,
+        Point3D position,
+        Long speed,
+        Direction direction,
+        Boolean colliding,
+        Behavior behavior,
+        Map<String, Image> images,
+        AnimationState animationState,
+        Dimension size
+    ) {
+        return new GameSprite(type, scale, blocking, position, speed, direction, colliding, behavior, images, animationState, size);
     }
 
     public Rectangle getBounds() {

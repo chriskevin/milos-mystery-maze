@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Chris Sundberg on 2016-03-14.
- */
 public class CLI {
 
     private Map<String, CliAction> actions;
@@ -51,7 +48,7 @@ public class CLI {
     public String run() {
         if (actions != null && actions.size() > 0) {
             history.add(currentCommand);
-            String msg = actions.get(currentCommand).execute();
+            var msg = actions.get(currentCommand).execute();
             currentCommand = "";
             return msg;
         } else {

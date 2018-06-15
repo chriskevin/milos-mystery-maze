@@ -9,9 +9,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/**
- * Created by Chris Sundberg on 2016-03-29.
- */
 public class GameEngine implements ActionListener {
 
     private final static Integer DELAY = 25;
@@ -22,7 +19,7 @@ public class GameEngine implements ActionListener {
     private final Timer timer;
 
     public static final Function2<GameView, GameEnvironment, GameEngine> createEngine =
-        (view, environment) -> new GameEngine(view, environment);
+        (view, environment) -> of(view, environment);
 
     public GameEngine(GameView view, GameEnvironment environment) {
         this.view = view;
@@ -31,6 +28,10 @@ public class GameEngine implements ActionListener {
         this.timer = new Timer(DELAY, this);
 
         timer.start();
+    }
+
+    public static final GameEngine of(GameView view, GameEnvironment environment) {
+        return new GameEngine(view, environment);
     }
 
     @Override
