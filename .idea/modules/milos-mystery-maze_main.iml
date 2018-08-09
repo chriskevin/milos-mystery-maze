@@ -14,6 +14,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Gradle: com.aol.simplereact:cyclops-react:1.0.5" level="project" />
     <orderEntry type="library" name="Gradle: org.immutables:value:2.6.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.reactivex:rxswing:0.24.0" level="project" />
     <orderEntry type="library" name="Gradle: io.reactivex:rxjava:1.1.6" level="project" />
     <orderEntry type="library" name="Gradle: io.vavr:vavr:0.9.2" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.12" level="project" />

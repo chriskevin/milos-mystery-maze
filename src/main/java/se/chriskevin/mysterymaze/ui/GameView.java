@@ -1,8 +1,12 @@
 package se.chriskevin.mysterymaze.ui;
 
 import io.vavr.Function1;
+import io.vavr.Function2;
 import io.vavr.collection.HashMap;
+import io.vavr.collection.List;
 import io.vavr.collection.Map;
+import rx.Observable;
+import rx.observables.SwingObservable;
 import se.chriskevin.mysterymaze.GameEngine;
 import se.chriskevin.mysterymaze.environment.GameEnvironment;
 import se.chriskevin.mysterymaze.environment.GameSprite;
@@ -16,6 +20,7 @@ import se.chriskevin.mysterymaze.utils.Calculation;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.concurrent.TimeUnit;
 
 import static se.chriskevin.mysterymaze.behavior.MoveBehavior.*;
 import static se.chriskevin.mysterymaze.behavior.StopBehavior.*;
@@ -52,7 +57,6 @@ public final class GameView extends JPanel {
         this.environment = environment;
         this.dimension = dimension;
 
-        addKeyListener(new TAdapter());
         setFocusable(true);
         setBackground(Color.BLACK);
         setPreferredSize(AWT.Dimension.of(dimension));
@@ -60,6 +64,43 @@ public final class GameView extends JPanel {
 
         inputEnabled = true;
         cli = new CLI();
+
+        SwingObservable
+            .fromKeyEvents(this)
+            .debounce(20L, TimeUnit.MILLISECONDS)
+            .subscribe((keyEvent) -> {
+                final Integer key = keyEvent.getKeyCode();
+                var pressed = keyEvent.paramString().split(",")[0].equals("KEY_PRESSED");
+
+                if (pressed) {
+                    this.environment = actOnPlayerAction(
+                        engine,
+                        keyMapMove,
+                        keyEvent.getKeyCode(),
+                        environment,
+                        anyCollision.apply(environment.sprites.filter(x -> x.blocking))
+                    );
+                } else {
+                    if (key.equals(KeyEvent.VK_SPACE)) {
+                        cli.isEnabled(!cli.isEnabled());
+                        engine.togglePaused();
+                    }
+
+                    actOnCliAction(cli, key);
+
+                    if (cli.isEnabled() && key.equals(KeyEvent.VK_SPACE)) {
+                        engine.togglePaused();
+                    } else {
+                        this.environment = actOnPlayerAction(
+                            engine,
+                            keyMapStop,
+                            key,
+                            environment,
+                            anyCollision.apply(environment.sprites.filter(x -> x.blocking))
+                        );
+                    }
+                }
+            });
     }
 
     public static final GameView of(Dimension dimension, GameEnvironment environment) {
@@ -140,63 +181,52 @@ public final class GameView extends JPanel {
         g.drawString("Console: " + cli.getCurrentCommand(), 32, 64);
     }
 
-    private class TAdapter extends KeyAdapter {
-
-        @Override
-        public void keyReleased(KeyEvent e) {
-            final Integer key = e.getKeyCode();
-
-            if (key.equals(0)) {
-                cli.isEnabled(!cli.isEnabled());
-                engine.togglePaused();
-            }
-
-            if (cli.isEnabled()) {
-                if (key >= 65 && key <= 90 || key.equals(KeyEvent.VK_SPACE)) {
-                    var currentCommand = cli.getCurrentCommand() + (char) key.intValue();
-                    cli.setCurrentCommand(currentCommand);
-                } else if (key.equals(KeyEvent.VK_BACK_SPACE)) {
-                    var currentCommand = cli.getCurrentCommand();
-                    cli.setCurrentCommand(currentCommand.substring(0, currentCommand.length() - 1));
-                } else if (key.equals(KeyEvent.VK_ENTER)) {
-                    cli.run();
-                }
-            }
-
-            if (cli.isEnabled() && key.equals(KeyEvent.VK_SPACE)) {
-                engine.togglePaused();
-            } else {
-                if (!engine.isPaused() && keyMapStop.get(e.getKeyCode()).isDefined()) {
-                    var player = getPlayer(environment.sprites);
-
-                    environment = GameEnvironment.of(
-                        environment.size,
-                        environment.sprites.replace(
-                            player,
-                            keyMapStop.get(e.getKeyCode())
-                                .map(b -> b.apply(player))
-                                .getOrNull()
-                        )
-                    );
-                }
-            }
-        }
-
-        @Override
-        public void keyPressed(KeyEvent e) {
-            if (!engine.isPaused() && keyMapMove.get(e.getKeyCode()).isDefined()) {
-                var player = getPlayer(environment.sprites);
-
-                environment = GameEnvironment.of(
-                    environment.size,
-                    environment.sprites.replace(
-                        player,
-                        keyMapMove.get(e.getKeyCode())
-                            .map(b -> b.apply(player))
-                            .getOrNull()
-                    )
-                );
+    public static void actOnCliAction(CLI cli, Integer key) {
+        if (cli.isEnabled()) {
+            if (key >= 65 && key <= 90 || key.equals(KeyEvent.VK_SPACE)) {
+                var currentCommand = cli.getCurrentCommand() + (char) key.intValue();
+                cli.setCurrentCommand(currentCommand);
+            } else if (key.equals(KeyEvent.VK_BACK_SPACE)) {
+                var currentCommand = cli.getCurrentCommand();
+                cli.setCurrentCommand(currentCommand.substring(0, currentCommand.length() - 1));
+            } else if (key.equals(KeyEvent.VK_ENTER)) {
+                cli.run();
             }
         }
     }
+
+    public static GameEnvironment actOnPlayerAction(
+            GameEngine engine,
+            Map<Integer, Function1<GameSprite, GameSprite>> keyMap,
+            Integer key,
+            GameEnvironment environment,
+            Function1<GameSprite, Boolean> checkCollision
+    ) {
+        if (!engine.isPaused() && keyMap.get(key).isDefined()) {
+            var player = getPlayer(environment.sprites);
+            var updatedPlayer = keyMap.get(key)
+                    .map(b -> b.apply(player))
+                    .getOrNull();
+
+            return (checkCollision.apply(updatedPlayer)) ?
+                environment
+                : GameEnvironment.of(
+                    environment.size,
+                    environment.sprites.replace(player, updatedPlayer)
+                );
+        } else {
+            return environment;
+        }
+    }
+
+    public static final Function2<GameSprite, GameSprite, Boolean> isColliding =
+        (target, blocker) ->
+            AWT.Rectangle.of(blocker.position, blocker.size).intersects(AWT.Rectangle.of(target.position, target.size));
+
+    public static final Function2<List<GameSprite>, GameSprite, Boolean> anyCollision =
+        (blockingSprites, sprite) ->
+            blockingSprites
+                .remove(sprite)
+                .toJavaStream()
+                .anyMatch((blocker) -> isColliding.apply(sprite, blocker));
 }

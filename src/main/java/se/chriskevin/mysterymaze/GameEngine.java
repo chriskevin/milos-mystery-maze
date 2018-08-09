@@ -1,6 +1,7 @@
 package se.chriskevin.mysterymaze;
 
 import io.vavr.Function2;
+import io.vavr.collection.List;
 import se.chriskevin.mysterymaze.environment.GameEnvironment;
 import se.chriskevin.mysterymaze.environment.GameSprite;
 import se.chriskevin.mysterymaze.ui.GameView;
@@ -13,7 +14,8 @@ public class GameEngine implements ActionListener {
 
     private final static Integer DELAY = 25;
 
-    private final GameEnvironment environment;
+    private GameEnvironment environment;
+    private List<GameSprite> blockingSprites;
     private final GameView view;
     private Boolean paused;
     private final Timer timer;
@@ -24,6 +26,7 @@ public class GameEngine implements ActionListener {
     public GameEngine(GameView view, GameEnvironment environment) {
         this.view = view;
         this.environment = environment;
+        this.blockingSprites = environment.sprites.filter(sprite -> sprite.blocking);
         this.paused = false;
         this.timer = new Timer(DELAY, this);
 
@@ -50,6 +53,11 @@ public class GameEngine implements ActionListener {
 
     public boolean isPaused() {
         return paused;
+    }
+
+    public void setEnvironment(GameEnvironment environment) {
+        this.environment = environment;
+        this.blockingSprites = environment.sprites.filter(sprite -> sprite.blocking);
     }
 
     public void togglePaused() {
