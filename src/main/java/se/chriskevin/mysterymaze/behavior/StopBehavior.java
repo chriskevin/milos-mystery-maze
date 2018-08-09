@@ -44,6 +44,6 @@ public enum StopBehavior implements Behavior {
     }
 
     private static GameSprite stop(GameSprite sprite, Long x, Long y, Direction direction) {
-        return GameSprite.of(sprite.type, sprite.scale, sprite.blocking, Point3D.of(x, y, 0L), sprite.speed, direction, sprite.colliding, sprite.behavior.get(), sprite.images, AnimationState.STOPPED, sprite.size);
+        return GameSprite.of(sprite.type, sprite.scale, sprite.blocking, Point3D.of(x, y, 0L), sprite.speed, direction, sprite.colliding, sprite.behavior.getOrNull(), sprite.images, AnimationState.STOPPED, sprite.size);
     }
 }

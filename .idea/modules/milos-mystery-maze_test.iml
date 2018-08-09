@@ -3,6 +3,9 @@
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_10">
     <output-test url="file://$MODULE_DIR$/../../out/test/classes" />
     <exclude-output />
+    <content url="file://$MODULE_DIR$/../../build/generated/source/apt/test">
+      <sourceFolder url="file://$MODULE_DIR$/../../build/generated/source/apt/test" isTestSource="true" generated="true" />
+    </content>
     <content url="file://$MODULE_DIR$/../../src/test">
       <sourceFolder url="file://$MODULE_DIR$/../../src/test/java" isTestSource="true" />
     </content>
@@ -10,6 +13,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="milos-mystery-maze_main" />
     <orderEntry type="library" name="Gradle: com.aol.simplereact:cyclops-react:1.0.5" level="project" />
+    <orderEntry type="library" name="Gradle: org.immutables:value:2.6.1" level="project" />
     <orderEntry type="library" name="Gradle: io.reactivex:rxjava:1.1.6" level="project" />
     <orderEntry type="library" name="Gradle: io.vavr:vavr:0.9.2" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.12" level="project" />

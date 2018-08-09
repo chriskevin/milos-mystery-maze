@@ -1,7 +1,5 @@
 package se.chriskevin.mysterymaze.geometry;
 
-import io.vavr.Function2;
-
 import java.io.Serializable;
 
 public final class Dimension implements Serializable {

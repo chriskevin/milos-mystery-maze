@@ -2,7 +2,7 @@ package se.chriskevin.mysterymaze;
 
 import io.vavr.Function0;
 import io.vavr.Function1;
-import se.chriskevin.mysterymaze.geometry.Dimension;
+import se.chriskevin.mysterymaze.environment.GameEnvironment;
 import se.chriskevin.mysterymaze.ui.ErrorView;
 import se.chriskevin.mysterymaze.ui.GameView;
 import se.chriskevin.mysterymaze.utils.AWT;
@@ -35,28 +35,35 @@ public final class Game extends JFrame {
         setLocationRelativeTo(null);
         hideCursor();
 
-        var environment = createEnvironment.compose(parseLevelFile).apply("/levels/level1.txt");
-
-        if (environment.isEmpty()) {
-            var errorView = ErrorView.of(Dimension.of(
-                Long.valueOf(this.getSize().width),
-                Long.valueOf(this.getSize().height)
-            ), "Unable to start game.");
-
-            setContentPane(errorView);
-        } else {
-            /*var view = GameView.of(Dimension.of(
-                Long.valueOf(this.getSize().width),
-                Long.valueOf(this.getSize().height)
-            ), environment);*/
-
-            //var engine = GameEngine.of(view, environment);
-
-            // view.setEngine(engine);
-
-            //setContentPane(view);
-        }
+        createEnvironment(parseLevelFile("/levels/level1.txt"))
+            .map(viewGame)
+            .onEmpty(viewError);
     }
+
+    private Function1<GameEnvironment, GameEnvironment> viewGame =
+        (environment) -> {
+            var view = GameView.of(
+                AWT.Dimension.of(this.getSize()),
+                environment
+            );
+
+            var engine = GameEngine.of(view, environment);
+            view.setEngine(engine);
+
+            setContentPane(view);
+
+            return environment;
+        };
+
+    private Runnable viewError =
+        () -> {
+            var view = ErrorView.of(
+                AWT.Dimension.of(this.getSize()),
+                "Unable to start game."
+            );
+
+            setContentPane(view);
+        };
 
     private Function0<BufferedImage> blankCursorImage =
         () -> new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);

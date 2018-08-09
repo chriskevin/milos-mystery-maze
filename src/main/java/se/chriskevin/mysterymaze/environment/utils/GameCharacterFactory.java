@@ -24,7 +24,7 @@ public final class GameCharacterFactory {
             case 2:
                 return Option.of(createRat(scale, currentLocation));
             case 3:
-                return Option.of(createZombie(scale, translateY.apply(-(14L * scale), currentLocation)));
+                return Option.of(createZombie(scale, translateY(-(14L * scale), currentLocation)));
         }
 
         return Option.none();
@@ -44,9 +44,9 @@ public final class GameCharacterFactory {
 
         var animationState = AnimationState.STOPPED;
         var direction = Direction.DOWN;
-        var images = convertToImages.apply(imageMap)
+        var images = convertToImages(imageMap)
                 .filterValues(Option::isDefined)
-                .mapValues(x -> resize.apply(scale, x.get()));
+                .mapValues(x -> resize(scale, x.get()));
 
         return GameSprite.of(
             SpriteType.PLAYER,
@@ -59,7 +59,7 @@ public final class GameCharacterFactory {
             null,
             images,
             animationState,
-            getSizeFromImageDimensions.apply(animationState, direction, images)
+            getSizeFromImageDimensions(animationState, direction, images)
         );
     }
 
@@ -77,9 +77,9 @@ public final class GameCharacterFactory {
 
         var animationState = AnimationState.WALKING;
         var direction = Direction.DOWN;
-        var images = convertToImages.apply(imageMap)
+        var images = convertToImages(imageMap)
                 .filterValues(Option::isDefined)
-                .mapValues(x -> resize.apply(scale, x.get()));
+                .mapValues(x -> resize(scale, x.get()));
 
         return GameSprite.of(
             SpriteType.ENEMY,
@@ -92,7 +92,7 @@ public final class GameCharacterFactory {
             MoveBehavior.HORIZONTAL_MOVEMENT,
             images,
             animationState,
-            getSizeFromImageDimensions.apply(animationState, direction, images)
+            getSizeFromImageDimensions(animationState, direction, images)
         );
     }
 
@@ -110,9 +110,9 @@ public final class GameCharacterFactory {
 
         var animationState = AnimationState.STOPPED;
         var direction = Direction.DOWN;
-        var images = convertToImages.apply(imageMap)
+        var images = convertToImages(imageMap)
                 .filterValues(Option::isDefined)
-                .mapValues(x -> resize.apply(scale, x.get()));
+                .mapValues(x -> resize(scale, x.get()));
 
         return GameSprite.of(
             SpriteType.ENEMY,
@@ -125,7 +125,7 @@ public final class GameCharacterFactory {
             null,
             images,
             AnimationState.STOPPED,
-            getSizeFromImageDimensions.apply(animationState, direction, images)
+            getSizeFromImageDimensions(animationState, direction, images)
         );
     }
 
@@ -136,9 +136,10 @@ public final class GameCharacterFactory {
 
         var animationState = AnimationState.STOPPED;
         var direction = Direction.DOWN;
-        var images = convertToImages.apply(imageMap)
+        var images = convertToImages(imageMap)
                 .filterValues(Option::isDefined)
-                .mapValues(x -> resize.apply(scale, x.get()));
+                .mapValues(Option::get)
+                .mapValues(x -> resize(scale, x));
 
         return GameSprite.of(
             SpriteType.TILE,
@@ -151,7 +152,7 @@ public final class GameCharacterFactory {
             null,
             images,
             AnimationState.STOPPED,
-            getSizeFromImageDimensions.apply(animationState, direction, images)
+            getSizeFromImageDimensions(animationState, direction, images)
         );
     }
 
@@ -163,9 +164,9 @@ public final class GameCharacterFactory {
 
         var animationState = AnimationState.STOPPED;
         var direction = Direction.DOWN;
-        var images = convertToImages.apply(imageMap)
+        var images = convertToImages(imageMap)
                 .filterValues(Option::isDefined)
-                .mapValues(x -> resize.apply(scale, x.get()));
+                .mapValues(x -> resize(scale, x.get()));
 
         return GameSprite.of(
             SpriteType.ENEMY,
@@ -178,7 +179,7 @@ public final class GameCharacterFactory {
             MoveBehavior.MOVE_UP,
             images,
             AnimationState.STOPPED,
-            getSizeFromImageDimensions.apply(animationState, direction, images)
+            getSizeFromImageDimensions(animationState, direction, images)
         );
     }
 }

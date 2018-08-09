@@ -12,9 +12,6 @@ import java.awt.*;
 
 import static java.lang.Math.multiplyExact;
 
-/**
- * Created by Chris Sundberg on 2016-03-12.
- */
 public class GameSprite {
 
     public Boolean blocking;
@@ -74,5 +71,9 @@ public class GameSprite {
 
     public Rectangle getBounds() {
         return new Rectangle(position.x.intValue(), position.y.intValue(), size.width.intValue(), size.height.intValue());
+    }
+
+    public String toString() {
+        return getClass().getName() + "[type=" + type + ",blocking=" + blocking + ",position=" + position + "]";
     }
 }

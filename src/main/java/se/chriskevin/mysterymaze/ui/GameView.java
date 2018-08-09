@@ -1,6 +1,5 @@
 package se.chriskevin.mysterymaze.ui;
 
-import io.vavr.Function2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 import se.chriskevin.mysterymaze.GameEngine;
@@ -14,6 +13,7 @@ import se.chriskevin.mysterymaze.geometry.Dimension;
 import se.chriskevin.mysterymaze.geometry.Point3D;
 import se.chriskevin.mysterymaze.utils.AWT;
 import se.chriskevin.mysterymaze.utils.CLI;
+import se.chriskevin.mysterymaze.utils.Calculation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +23,6 @@ import static se.chriskevin.mysterymaze.environment.ImageUtil.getImage;
 import static se.chriskevin.mysterymaze.environment.ImageUtil.imageMapKey;
 import static se.chriskevin.mysterymaze.environment.utils.GameSpriteUtil.getByType;
 import static se.chriskevin.mysterymaze.environment.utils.GameSpriteUtil.getPlayer;
-import static se.chriskevin.mysterymaze.utils.Calculation.add;
 
 public final class GameView extends JPanel {
 
@@ -48,9 +47,6 @@ public final class GameView extends JPanel {
     private GameEngine engine;
     private GameEnvironment environment;
 
-    public static final Function2<Dimension, GameEnvironment, GameView> createView =
-        (dimension, environment) -> of(dimension, environment);
-
 
     public GameView(Dimension dimension, GameEnvironment environment) {
         this.environment = environment;
@@ -70,18 +66,18 @@ public final class GameView extends JPanel {
         return new GameView(dimension, environment);
     }
 
-    public static void renderSprite(Graphics g, GameView gameView, Point3D offsetP, GameSprite sprite) {
+    public static final void renderSprite(Graphics g, GameView gameView, Point3D offsetP, GameSprite sprite) {
         var g2d = (Graphics2D) g;
 
         if (sprite.colliding) {
-            drawCollisionZone(g, new Rectangle(add.apply(sprite.position.x, offsetP.x).intValue(), add.apply(sprite.position.y, offsetP.y).intValue(), sprite.size.width.intValue(), sprite.size.height.intValue()));
+            drawCollisionZone(g, new Rectangle(Calculation.add(sprite.position.x, offsetP.x).intValue(), Calculation.add(sprite.position.y, offsetP.y).intValue(), sprite.size.width.intValue(), sprite.size.height.intValue()));
         }
-        g2d.drawImage(getImage.apply(imageMapKey.apply(sprite.animationState, sprite.direction), sprite.images), add.apply(sprite.position.x, offsetP.x).intValue(), add.apply(sprite.position.y, offsetP.y).intValue(), gameView);
+        g2d.drawImage(getImage(imageMapKey(sprite.animationState, sprite.direction), sprite.images), Calculation.add(sprite.position.x, offsetP.x).intValue(), Calculation.add(sprite.position.y, offsetP.y).intValue(), gameView);
     }
 
-    public static void drawCollisionZone(Graphics g, Rectangle bounds) {
+    public static final void drawCollisionZone(Graphics g, Rectangle bounds) {
         var myColour = new Color(255, 0, 0, 128);
-        g.setColor(myColour);
+        g.setColor(myColour);  
         g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
     }
 
@@ -114,8 +110,8 @@ public final class GameView extends JPanel {
         g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
         var ingameMsg = !engine.isPaused() ? "Playing " : "Paused ";
         var levelMsg = " Level 1";
-        var enemyMsg = " Enemies: " + getByType.apply(SpriteType.ENEMY).apply(environment.sprites).size();
-        var player = getPlayer.apply(environment.sprites);
+        var enemyMsg = " Enemies: " + getByType(SpriteType.ENEMY, environment.sprites).size();
+        var player = getPlayer(environment.sprites);
 
         var coordsMsg =
             new StringBuilder()
@@ -170,18 +166,36 @@ public final class GameView extends JPanel {
             if (cli.isEnabled() && key.equals(KeyEvent.VK_SPACE)) {
                 engine.togglePaused();
             } else {
-                if (!engine.isPaused()) {
-                    keyMapStop.get(e.getKeyCode())
-                        .map(x -> x.execute(getPlayer.apply(environment.sprites)));
+                if (!engine.isPaused() && keyMapStop.get(e.getKeyCode()).isDefined()) {
+                    var player = getPlayer(environment.sprites);
+
+                    environment = GameEnvironment.of(
+                        environment.size,
+                        environment.sprites.replace(
+                            player,
+                            keyMapStop.get(e.getKeyCode())
+                                .map(b -> b.execute(player))
+                                .getOrNull()
+                        )
+                    );
                 }
             }
         }
 
         @Override
         public void keyPressed(KeyEvent e) {
-            if (!engine.isPaused()) {
-                keyMapMove.get(e.getKeyCode())
-                    .map(x -> x.execute(getPlayer.apply(environment.sprites)));
+            if (!engine.isPaused() && keyMapMove.get(e.getKeyCode()).isDefined()) {
+                var player = getPlayer(environment.sprites);
+
+                environment = GameEnvironment.of(
+                    environment.size,
+                    environment.sprites.replace(
+                        player,
+                        keyMapMove.get(e.getKeyCode())
+                            .map(b -> b.execute(player))
+                            .getOrNull()
+                    )
+                );
             }
         }
     }

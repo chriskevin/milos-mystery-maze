@@ -20,12 +20,12 @@ public class CameraTest {
         final Dimension size =  Dimension.of(30L, 30L);
 
         final List<GameSprite> unfilteredSprites = List.of(
-            new GameSprite(null, 1L, false, ZERO_POINT3D, 0L, null, false, null, HashMap.empty(), null, size),
-            new GameSprite(null, 1L, false, Point3D.of(400L, 400L, 0L), 0L, null, false, null, HashMap.empty(), null, size),
-            new GameSprite(null, 1L, false, Point3D.of(30L, 30L, 0L), 0L, null, false, null, HashMap.empty(), null, size)
+            GameSprite.of(null, 1L, false, ZERO_POINT3D, 0L, null, false, null, HashMap.empty(), null, size),
+            GameSprite.of(null, 1L, false, Point3D.of(400L, 400L, 0L), 0L, null, false, null, HashMap.empty(), null, size),
+            GameSprite.of(null, 1L, false, Point3D.of(30L, 30L, 0L), 0L, null, false, null, HashMap.empty(), null, size)
         );
 
-        final List<GameSprite> result = getVisibleSprites.apply(unfilteredSprites, new Rectangle(0, 0, 300, 200));
+        final List<GameSprite> result = getVisibleSprites(unfilteredSprites, new Rectangle(0, 0, 300, 200));
 
         assertEquals(2, result.size());
         assertEquals(unfilteredSprites.get(0), result.get(0));

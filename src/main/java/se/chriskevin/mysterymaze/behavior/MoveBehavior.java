@@ -3,16 +3,8 @@ package se.chriskevin.mysterymaze.behavior;
 import se.chriskevin.mysterymaze.animation.AnimationState;
 import se.chriskevin.mysterymaze.animation.Direction;
 import se.chriskevin.mysterymaze.environment.GameSprite;
-import se.chriskevin.mysterymaze.geometry.Point3D;
-
-import static se.chriskevin.mysterymaze.geometry.Point3D.ZERO_POINT3D;
 import static se.chriskevin.mysterymaze.geometry.Point3D.translate;
-import static se.chriskevin.mysterymaze.geometry.Point3D.translateX;
-import static se.chriskevin.mysterymaze.geometry.Point3D.translateY;
-import static se.chriskevin.mysterymaze.utils.Calculation.add;
 import static se.chriskevin.mysterymaze.utils.Calculation.half;
-import static se.chriskevin.mysterymaze.utils.Calculation.subtract;
-import static se.chriskevin.mysterymaze.utils.Common.equals;
 
 public enum MoveBehavior implements Behavior {
 
@@ -20,13 +12,13 @@ public enum MoveBehavior implements Behavior {
         @Override
         public GameSprite execute(GameSprite sprite) {
             var dl = sprite.position;
-            var halfSpeed = half.apply(sprite.speed);
+            var halfSpeed = half(sprite.speed);
 
             /*return Option.of(ZERO_POINT3D)
-                .map(tranformWhen.apply(equals.apply(Direction.DOWN, sprite.direction), translateY.apply(subtract.apply(dl.y, halfSpeed))))
-                .map(tranformWhen.apply(equals.apply(Direction.LEFT, sprite.direction), translateX.apply(add.apply(dl.x, halfSpeed))))
-                .map(tranformWhen.apply(equals.apply(Direction.RIGHT, sprite.direction), translateX.apply(-add.apply(dl.x, halfSpeed))))
-                .map(tranformWhen.apply(equals.apply(Direction.UP, sprite.direction), translateY.apply(subtract.apply(-dl.y, halfSpeed))))
+                .map(transformWhen(equals(Direction.DOWN, sprite.direction), translateY(subtract(dl.y, halfSpeed))))
+                .map(transformWhen(equals(Direction.LEFT, sprite.direction), translateX(add(dl.x, halfSpeed))))
+                .map(transformWhen(equals(Direction.RIGHT, sprite.direction), translateX(-add(dl.x, halfSpeed))))
+                .map(transformWhen(equals(Direction.UP, sprite.direction), translateY(subtract(-dl.y, halfSpeed))))
                 .map(x -> new GameSprite(sprite.type, sprite.scale, sprite.blocking, x, sprite.speed, sprite.direction, sprite.colliding, sprite.behavior.get(), sprite.images, AnimationState.WALKING)))
                 .get();*/
 
@@ -96,6 +88,6 @@ public enum MoveBehavior implements Behavior {
     }
 
     private static GameSprite move(GameSprite sprite, Long x, Long y, Direction direction, StopBehavior stopBehavior) {
-        return GameSprite.of(sprite.type, sprite.scale, sprite.blocking, translate.apply(Long.valueOf(x), Long.valueOf(y), 0L, sprite.position), sprite.speed, direction, sprite.colliding, sprite.behavior.get(), sprite.images, AnimationState.WALKING, sprite.size);
+        return GameSprite.of(sprite.type, sprite.scale, sprite.blocking, translate(Long.valueOf(x), Long.valueOf(y), 0L, sprite.position), sprite.speed, direction, sprite.colliding, sprite.behavior.getOrNull(), sprite.images, AnimationState.WALKING, sprite.size);
     }
 }

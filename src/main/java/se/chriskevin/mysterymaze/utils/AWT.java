@@ -13,9 +13,9 @@ public class AWT {
             return new java.awt.Dimension(dimension.width.intValue(), dimension.height.intValue());
         }
 
-        /*public static final se.chriskevin.mysterymaze.geometry.Dimension of(java.awt.Dimension dimension) {
-            return new se.chriskevin.mysterymaze.geometry.Dimension.of((long) dimension.width, (long) dimension.height);
-        }*/
+        public static final se.chriskevin.mysterymaze.geometry.Dimension of(java.awt.Dimension dimension) {
+            return se.chriskevin.mysterymaze.geometry.Dimension.of((long) dimension.width, (long) dimension.height);
+        }
     }
 
     public static final class Point {

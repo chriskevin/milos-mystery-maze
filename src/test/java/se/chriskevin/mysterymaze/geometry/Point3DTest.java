@@ -26,13 +26,13 @@ public class Point3DTest {
     @Test
     public void verifyMove() {
         final Point3D p = Point3D.of(2L, 2L, 3L);
-        assertEquals(move.apply(1L, 0L, 2L, p), Point3D.of(1L, 0L,  2L));
+        assertEquals(move(1L, 0L, 2L, p), Point3D.of(1L, 0L,  2L));
     }
 
     @Test
     public void verifyTranslate() {
         final Point3D p = Point3D.of(0L, 0L, 0L);
-        assertEquals(translate.apply(2L, 0L, -2L, p), Point3D.of(2L, 0L, -2L));
+        assertEquals(translate(2L, 0L, -2L, p), Point3D.of(2L, 0L, -2L));
         assertEquals(p, p);
     }
 

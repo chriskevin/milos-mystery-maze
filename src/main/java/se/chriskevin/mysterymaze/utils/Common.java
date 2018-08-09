@@ -10,6 +10,8 @@ public final class Common {
 
     public static final Function2<Object, Object, Boolean> equals = (x, y) -> x.equals(y);
 
+    public static final Boolean equals(Object x, Object y) {return equals.apply(x, y); }
+
     public static final Function<Object, Object> identity = (x) -> x;
 
     public static final Function0<Boolean> F = () -> Boolean.valueOf(false);
