@@ -1,11 +1,11 @@
 package se.chriskevin.mysterymaze.collision;
 
 import io.vavr.collection.List;
-import se.chriskevin.mysterymaze.behavior.MoveBehavior;
 import se.chriskevin.mysterymaze.environment.GameSprite;
 import se.chriskevin.mysterymaze.environment.SpriteType;
 
 
+import static se.chriskevin.mysterymaze.behavior.MoveBehavior.bounceBack;
 import static se.chriskevin.mysterymaze.environment.utils.GameSpriteUtil.getByType;
 import static se.chriskevin.mysterymaze.environment.utils.GameSpriteUtil.getPlayer;
 
@@ -16,7 +16,7 @@ public final class CollisionHandler {
     }
 
     public static final GameSprite checkAndHandleCollision(GameSprite a, GameSprite b) {
-        return (!a.equals(b) && isColliding(a, b)) ? MoveBehavior.BOUNCE_BACK.execute(a) : a;
+        return (!a.equals(b) && isColliding(a, b)) ? bounceBack.apply(a) : a;
     }
 
     public static final void setCollisions(List<GameSprite> sprites) {
@@ -38,7 +38,7 @@ public final class CollisionHandler {
 
     public static final Boolean checkCollision(GameSprite a, GameSprite b) {
         while (!a.equals(b) && isColliding(a, b)) {
-            MoveBehavior.BOUNCE_BACK.execute(a);
+            bounceBack.apply(a);
             a.colliding = isColliding(a, b);
             b.colliding = isColliding(a, b);
         }

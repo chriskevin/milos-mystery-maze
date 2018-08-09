@@ -1,11 +1,9 @@
 package se.chriskevin.mysterymaze.ui;
 
+import io.vavr.Function1;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 import se.chriskevin.mysterymaze.GameEngine;
-import se.chriskevin.mysterymaze.behavior.Behavior;
-import se.chriskevin.mysterymaze.behavior.MoveBehavior;
-import se.chriskevin.mysterymaze.behavior.StopBehavior;
 import se.chriskevin.mysterymaze.environment.GameEnvironment;
 import se.chriskevin.mysterymaze.environment.GameSprite;
 import se.chriskevin.mysterymaze.environment.SpriteType;
@@ -19,6 +17,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import static se.chriskevin.mysterymaze.behavior.MoveBehavior.*;
+import static se.chriskevin.mysterymaze.behavior.StopBehavior.*;
 import static se.chriskevin.mysterymaze.environment.ImageUtil.getImage;
 import static se.chriskevin.mysterymaze.environment.ImageUtil.imageMapKey;
 import static se.chriskevin.mysterymaze.environment.utils.GameSpriteUtil.getByType;
@@ -27,18 +27,18 @@ import static se.chriskevin.mysterymaze.environment.utils.GameSpriteUtil.getPlay
 public final class GameView extends JPanel {
 
     // Move this
-    private Map<Integer, Behavior> keyMapStop = HashMap.of(
-        KeyEvent.VK_DOWN, StopBehavior.STOP_DOWN,
-        KeyEvent.VK_LEFT, StopBehavior.STOP_LEFT,
-        KeyEvent.VK_RIGHT, StopBehavior.STOP_RIGHT,
-        KeyEvent.VK_UP, StopBehavior.STOP_UP
+    private Map<Integer, Function1<GameSprite, GameSprite>> keyMapStop = HashMap.of(
+        KeyEvent.VK_DOWN, stopDown,
+        KeyEvent.VK_LEFT, stopLeft,
+        KeyEvent.VK_RIGHT, stopRight,
+        KeyEvent.VK_UP, stopUp
     );
 
-    private Map<Integer, Behavior> keyMapMove = HashMap.of(
-        KeyEvent.VK_DOWN, MoveBehavior.MOVE_DOWN,
-        KeyEvent.VK_LEFT, MoveBehavior.MOVE_LEFT,
-        KeyEvent.VK_RIGHT, MoveBehavior.MOVE_RIGHT,
-        KeyEvent.VK_UP, MoveBehavior.MOVE_UP
+    private Map<Integer, Function1<GameSprite, GameSprite>> keyMapMove = HashMap.of(
+        KeyEvent.VK_DOWN, moveDown,
+        KeyEvent.VK_LEFT, moveLeft,
+        KeyEvent.VK_RIGHT, moveRight,
+        KeyEvent.VK_UP, moveUp
     );
 
     private CLI cli;
@@ -174,7 +174,7 @@ public final class GameView extends JPanel {
                         environment.sprites.replace(
                             player,
                             keyMapStop.get(e.getKeyCode())
-                                .map(b -> b.execute(player))
+                                .map(b -> b.apply(player))
                                 .getOrNull()
                         )
                     );
@@ -192,7 +192,7 @@ public final class GameView extends JPanel {
                     environment.sprites.replace(
                         player,
                         keyMapMove.get(e.getKeyCode())
-                            .map(b -> b.execute(player))
+                            .map(b -> b.apply(player))
                             .getOrNull()
                     )
                 );

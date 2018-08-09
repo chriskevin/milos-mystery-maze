@@ -45,7 +45,7 @@ public class GameEngine implements ActionListener {
     }
 
     public static void act(GameSprite sprite) {
-        sprite.behavior.toJavaOptional().ifPresent((b) -> b.execute(sprite));
+        sprite.behavior.forEach((b) -> {/* b.apply(sprite) */});
     }
 
     public boolean isPaused() {

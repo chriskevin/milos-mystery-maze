@@ -5,6 +5,7 @@ import io.vavr.collection.Map;
 import io.vavr.control.Option;
 import se.chriskevin.mysterymaze.animation.AnimationState;
 import se.chriskevin.mysterymaze.animation.Direction;
+import se.chriskevin.mysterymaze.behavior.Behavior;
 import se.chriskevin.mysterymaze.behavior.MoveBehavior;
 import se.chriskevin.mysterymaze.environment.GameSprite;
 import se.chriskevin.mysterymaze.environment.SpriteType;
@@ -89,7 +90,7 @@ public final class GameCharacterFactory {
             8L,
             direction,
             false,
-            MoveBehavior.HORIZONTAL_MOVEMENT,
+            Behavior.MOVE_HORIZONTAL,
             images,
             animationState,
             getSizeFromImageDimensions(animationState, direction, images)
@@ -176,7 +177,7 @@ public final class GameCharacterFactory {
             8L,
             direction,
             false,
-            MoveBehavior.MOVE_UP,
+            Behavior.MOVE_UP,
             images,
             AnimationState.STOPPED,
             getSizeFromImageDimensions(animationState, direction, images)

@@ -1,8 +1,16 @@
 package se.chriskevin.mysterymaze.behavior;
 
-import se.chriskevin.mysterymaze.environment.GameSprite;
-
-public enum MoveBehavior
-
-    GameSprite execute(GameSprite sprite);
+public enum Behavior {
+    MOVE_UP,
+    MOVE_RIGHT,
+    MOVE_DOWN,
+    MOVE_LEFT,
+    STOP_UP,
+    STOP_RIGHT,
+    STOP_DOWN,
+    STOP_LEFT,
+    BOUNCE_BACK,
+    MOVE_HORIZONTAL,
+    MOVE_VERTICAL,
+    FOLLOW
 }
