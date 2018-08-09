@@ -5,7 +5,6 @@ import io.vavr.Function2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
-import rx.Observable;
 import rx.observables.SwingObservable;
 import se.chriskevin.mysterymaze.GameEngine;
 import se.chriskevin.mysterymaze.environment.GameEnvironment;
@@ -76,7 +75,7 @@ public final class GameView extends JPanel {
                     this.environment = actOnPlayerAction(
                         engine,
                         keyMapMove,
-                        keyEvent.getKeyCode(),
+                        key,
                         environment,
                         anyCollision.apply(environment.sprites.filter(x -> x.blocking))
                     );

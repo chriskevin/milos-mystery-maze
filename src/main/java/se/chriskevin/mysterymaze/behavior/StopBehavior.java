@@ -5,7 +5,6 @@ import io.vavr.Function2;
 import se.chriskevin.mysterymaze.animation.AnimationState;
 import se.chriskevin.mysterymaze.animation.Direction;
 import se.chriskevin.mysterymaze.environment.GameSprite;
-import se.chriskevin.mysterymaze.geometry.Point3D;
 
 public class StopBehavior {
 
@@ -14,11 +13,7 @@ public class StopBehavior {
             sprite.type,
             sprite.scale,
             sprite.blocking,
-            Point3D.of(
-                (direction.equals(Direction.DOWN) || direction.equals(Direction.UP)) ? sprite.position.x : 0L,
-                (direction.equals(Direction.RIGHT) || direction.equals(Direction.LEFT)) ? sprite.position.y : 0L,
-                0L
-            ),
+            sprite.position,
             sprite.speed,
             direction,
             sprite.colliding,

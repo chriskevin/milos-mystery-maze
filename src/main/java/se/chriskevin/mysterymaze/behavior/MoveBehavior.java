@@ -70,7 +70,4 @@ public class MoveBehavior {
 
         return sprite.behavior.get().execute(sprite);
     };*/
-
-    public static final Function1<GameSprite, GameSprite> moveVertical = (sprite) ->
-        sprite;
 }
