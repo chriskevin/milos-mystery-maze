@@ -5,6 +5,8 @@
       <profile default="true" name="Default" enabled="true" />
     </annotationProcessing>
     <bytecodeTargetLevel target="10">
+      <module name="milos-mystery-maze.main" target="11" />
+      <module name="milos-mystery-maze.test" target="11" />
       <module name="milos-mystery-maze_main" target="1.10" />
       <module name="milos-mystery-maze_test" target="1.10" />
     </bytecodeTargetLevel>
