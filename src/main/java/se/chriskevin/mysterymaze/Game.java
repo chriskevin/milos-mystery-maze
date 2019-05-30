@@ -3,6 +3,7 @@ package se.chriskevin.mysterymaze;
 import io.vavr.Function0;
 import io.vavr.Function1;
 import se.chriskevin.mysterymaze.environment.GameEnvironment;
+import se.chriskevin.mysterymaze.sound.MidiPlayer;
 import se.chriskevin.mysterymaze.ui.ErrorView;
 import se.chriskevin.mysterymaze.ui.GameView;
 import se.chriskevin.mysterymaze.utils.AWT;
@@ -20,7 +21,7 @@ public final class Game extends JFrame {
         initUI();
     }
 
-    public static final Game of() {
+    public static Game of() {
         return new Game();
     }
 
@@ -34,6 +35,9 @@ public final class Game extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         hideCursor();
+
+        var soundThread = new Thread(() -> MidiPlayer.play("/sounds/eye_of_the_tiger.mid"));
+        soundThread.start();
 
         createEnvironment(parseLevelFile("/levels/level1.txt"))
             .map(viewGame)
@@ -77,8 +81,6 @@ public final class Game extends JFrame {
     }
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            Game.of().setVisible(true);
-        });
+        EventQueue.invokeLater(() -> Game.of().setVisible(true));
     }
 }

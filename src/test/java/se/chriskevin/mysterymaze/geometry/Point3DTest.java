@@ -24,6 +24,18 @@ public class Point3DTest {
     }
 
     @Test
+    public void verifyAdd() {
+        final Point3D a = Point3D.of(2L, 2L, 2L);
+        assertEquals(add(a, a), of(4L, 4L, 4L));
+    }
+
+    @Test
+    public void verifySubtract() {
+        final Point3D a = Point3D.of(2L, 2L, 2L);
+        assertEquals(subtract(a, a), of(0L, 0L, 0L));
+    }
+
+    @Test
     public void verifyMove() {
         final Point3D p = Point3D.of(2L, 2L, 3L);
         assertEquals(move(1L, 0L, 2L, p), Point3D.of(1L, 0L,  2L));

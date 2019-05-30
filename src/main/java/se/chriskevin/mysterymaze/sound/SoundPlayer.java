@@ -10,6 +10,8 @@ package se.chriskevin.mysterymaze.sound;
  * in the track and simply play the track ones.
  */
 
+import io.vavr.control.Try;
+
 import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.AudioFormat;
@@ -108,36 +110,30 @@ public class SoundPlayer extends Thread {
      * and writes it to the soundcard via a bit stream.
      */
     public void run() {
-        var soundFile = new File(filename);
+        final var soundFile = new File(filename);
 
         if (!soundFile.exists()) {
             System.err.println("Wave file not found: " + filename);
             return;
         }
 
-        AudioInputStream audioInputStream = null;
-        try {
-            audioInputStream = AudioSystem.getAudioInputStream(soundFile);
-        } catch (UnsupportedAudioFileException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        final var audioInputStream = Try.of(() -> AudioSystem.getAudioInputStream(soundFile))
+            .getOrElseThrow((x) -> new RuntimeException(x));
 
-        var format = audioInputStream.getFormat();
-        var info = new DataLine.Info(SourceDataLine.class, format);
+        final var format = audioInputStream.getFormat();
+        final var info = new DataLine.Info(SourceDataLine.class, format);
 
         try {
             channel = (SourceDataLine) AudioSystem.getLine(info);
             channel.open(format);
-        } catch (LineUnavailableException e) {
+        } catch (final LineUnavailableException e) {
             throw new RuntimeException(e);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
 
         if (channel.isControlSupported(FloatControl.Type.PAN)) {
-            var pan = (FloatControl) channel.getControl(FloatControl.Type.PAN);
+            final var pan = (FloatControl) channel.getControl(FloatControl.Type.PAN);
             if (curPosition == Position.RIGHT) {
                 pan.setValue(1.0f);
             } else if (curPosition == Position.LEFT) {
@@ -156,7 +152,7 @@ public class SoundPlayer extends Thread {
                     channel.write(abData, 0, nBytesRead);
                 }
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         } finally {
             if (loop == true) {

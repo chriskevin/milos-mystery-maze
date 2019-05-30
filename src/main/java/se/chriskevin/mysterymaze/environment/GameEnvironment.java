@@ -31,7 +31,7 @@ public class GameEnvironment {
         this.sprites = sprites;
     }
 
-    public static final GameEnvironment of(Dimension size, List<GameSprite> sprites) {
+    public static GameEnvironment of(Dimension size, List<GameSprite> sprites) {
         return new GameEnvironment(size, sprites);
     }
 
@@ -65,7 +65,7 @@ public class GameEnvironment {
             case 'm':
                 sprites
                         .push(createTile(scale, currentLocation, false, createTileImagePath(type, typeId)));
-                var sprite = createEnemy(Long.valueOf(typeId - '0'), currentLocation, scale);
+                var sprite = createEnemy((long) (typeId - '0'), currentLocation, scale);
                 if (sprite.isDefined()) {
                     sprites.push(sprite.get());
                 }
@@ -84,20 +84,20 @@ public class GameEnvironment {
                 List<GameSprite> sprites = List.empty();
 
                 for (String row : levelData) {
-                    var rn = Long.valueOf(rowNo.getAndIncrement());
+                    var rn = (long) rowNo.getAndIncrement();
 
                     for (int i = 0; i < row.length(); i += 3) {
                         var type = row.charAt(i);
                         var typeId = row.charAt((i + 1));
 
-                        System.out.println("Row: " + rn + ", Column: " + i / 3 + ", Type: " + type + typeId);
-                        System.out.println(currentLocation);
+                        // System.out.println("Row: " + rn + ", Column: " + i / 3 + ", Type: " + type + typeId);
+                        // System.out.println(currentLocation);
 
                         currentLocation = translateX(multiply(TILE_WIDTH, SCALE), currentLocation);
                         sprites = createSprite(type, typeId, SCALE, currentLocation, sprites);
                     }
 
-                    currentLocation = move(0L, (TILE_WIDTH * SCALE) * Long.valueOf(rowNo.get()), 0L, currentLocation);
+                    currentLocation = move(0L, (TILE_WIDTH * SCALE) * (long) rowNo.get(), 0L, currentLocation);
 
                 }
 
@@ -110,8 +110,8 @@ public class GameEnvironment {
             Option.of(
                 GameEnvironment.of(
                     Dimension.of(
-                    multiply(Long.valueOf(levelData.get(0).split("|").length), TILE_WIDTH) * SCALE,
-                    multiply(Long.valueOf(levelData.size()), TILE_WIDTH) * SCALE
+                    multiply((long) levelData.get(0).split("|").length, TILE_WIDTH) * SCALE,
+                    multiply((long) levelData.size(), TILE_WIDTH) * SCALE
                     ),
                     createLevel.apply(levelData)
                 )

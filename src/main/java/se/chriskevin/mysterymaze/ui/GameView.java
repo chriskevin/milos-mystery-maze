@@ -5,6 +5,7 @@ import io.vavr.Function2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
+import rx.Observable;
 import rx.observables.SwingObservable;
 import se.chriskevin.mysterymaze.GameEngine;
 import se.chriskevin.mysterymaze.environment.GameEnvironment;
@@ -14,7 +15,6 @@ import se.chriskevin.mysterymaze.geometry.Dimension;
 import se.chriskevin.mysterymaze.geometry.Point3D;
 import se.chriskevin.mysterymaze.utils.AWT;
 import se.chriskevin.mysterymaze.utils.CLI;
-import se.chriskevin.mysterymaze.utils.Calculation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +30,7 @@ import static se.chriskevin.mysterymaze.environment.utils.GameSpriteUtil.getPlay
 
 public final class GameView extends JPanel {
 
-    // Move this
+    // TODO: Move this
     private Map<Integer, Function1<GameSprite, GameSprite>> keyMapStop = HashMap.of(
         KeyEvent.VK_DOWN, stopDown,
         KeyEvent.VK_LEFT, stopLeft,
@@ -50,6 +50,7 @@ public final class GameView extends JPanel {
     private Dimension dimension;
     private GameEngine engine;
     private GameEnvironment environment;
+    private int counter = 0;
 
 
     public GameView(Dimension dimension, GameEnvironment environment) {
@@ -64,21 +65,26 @@ public final class GameView extends JPanel {
         inputEnabled = true;
         cli = new CLI();
 
+        final var o = Observable
+                    .fromCallable(() -> 1);
+
         SwingObservable
             .fromKeyEvents(this)
-            .debounce(20L, TimeUnit.MILLISECONDS)
+            .debounce(200L, TimeUnit.MILLISECONDS)
             .subscribe((keyEvent) -> {
                 final Integer key = keyEvent.getKeyCode();
-                var pressed = keyEvent.paramString().split(",")[0].equals("KEY_PRESSED");
+                final var pressed = keyEvent.paramString().split(",")[0].equals("KEY_PRESSED");
+
+                System.out.println("key=" + key);
 
                 if (pressed) {
-                    this.environment = actOnPlayerAction(
+                    setEnvironment(actOnPlayerAction(
                         engine,
                         keyMapMove,
                         key,
-                        environment,
-                        anyCollision.apply(environment.sprites.filter(x -> x.blocking))
-                    );
+                        getEnvironment(),
+                        anyCollision.apply(getEnvironment().sprites.filter(x -> x.blocking))
+                    ));
                 } else {
                     if (key.equals(KeyEvent.VK_SPACE)) {
                         cli.isEnabled(!cli.isEnabled());
@@ -90,29 +96,43 @@ public final class GameView extends JPanel {
                     if (cli.isEnabled() && key.equals(KeyEvent.VK_SPACE)) {
                         engine.togglePaused();
                     } else {
-                        this.environment = actOnPlayerAction(
+                        setEnvironment(actOnPlayerAction(
                             engine,
                             keyMapStop,
                             key,
-                            environment,
-                            anyCollision.apply(environment.sprites.filter(x -> x.blocking))
-                        );
+                            getEnvironment(),
+                            anyCollision.apply(getEnvironment().sprites.filter(x -> x.blocking))
+                        ));
                     }
                 }
             });
+    }
+
+    private GameEnvironment getEnvironment() {
+        return this.environment;
+    }
+
+    private void setEnvironment(GameEnvironment environment) {
+        this.environment = environment;
     }
 
     public static final GameView of(Dimension dimension, GameEnvironment environment) {
         return new GameView(dimension, environment);
     }
 
-    public static final void renderSprite(Graphics g, GameView gameView, Point3D offsetP, GameSprite sprite) {
+    public static final void renderSprite(Graphics g, GameView gameView, Point3D spriteOffset, GameSprite sprite) {
         var g2d = (Graphics2D) g;
 
         if (sprite.colliding) {
-            drawCollisionZone(g, new Rectangle(Calculation.add(sprite.position.x, offsetP.x).intValue(), Calculation.add(sprite.position.y, offsetP.y).intValue(), sprite.size.width.intValue(), sprite.size.height.intValue()));
+            drawCollisionZone(g, AWT.Rectangle.of(spriteOffset, sprite.size));
         }
-        g2d.drawImage(getImage(imageMapKey(sprite.animationState, sprite.direction), sprite.images), Calculation.add(sprite.position.x, offsetP.x).intValue(), Calculation.add(sprite.position.y, offsetP.y).intValue(), gameView);
+
+        g2d.drawImage(
+            getImage(imageMapKey(sprite.animationState, sprite.direction), sprite.images),
+            spriteOffset.x.intValue(),
+            spriteOffset.y.intValue(),
+            gameView
+        );
     }
 
     public static final void drawCollisionZone(Graphics g, Rectangle bounds) {
@@ -136,7 +156,10 @@ public final class GameView extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Camera.update(dimension, environment.size, environment.sprites, this, g);
+        counter = (counter < environment.sprites.size()) ? counter + 1 : 0;
+        // var target = environment.sprites.get(counter);
+        var target = getPlayer(environment.sprites);
+        Camera.update(dimension, environment.size, environment.sprites, this, g, target);
         doDrawing(g);
         Toolkit.getDefaultToolkit().sync();
     }
@@ -220,7 +243,8 @@ public final class GameView extends JPanel {
 
     public static final Function2<GameSprite, GameSprite, Boolean> isColliding =
         (target, blocker) ->
-            AWT.Rectangle.of(blocker.position, blocker.size).intersects(AWT.Rectangle.of(target.position, target.size));
+            AWT.Rectangle.of(blocker.position, blocker.size)
+                .intersects(AWT.Rectangle.of(target.position, target.size));
 
     public static final Function2<List<GameSprite>, GameSprite, Boolean> anyCollision =
         (blockingSprites, sprite) ->

@@ -17,17 +17,17 @@ public class MoveBehaviorTest {
     @Test
     public void verifyStopUp() {
         var sprite = GameSprite.of(
-                SpriteType.PLAYER,
-                1L,
-                false,
-                Point3D.ZERO_POINT3D,
-                8L,
-                Direction.DOWN,
-                false,
-                null,
-                null,
-                AnimationState.STOPPED,
-                Dimension.ZERO_DIMENSION
+            SpriteType.PLAYER,
+            1L,
+            false,
+            Point3D.ZERO_POINT3D,
+            8L,
+            Direction.DOWN,
+            false,
+            null,
+            null,
+            AnimationState.STOPPED,
+            Dimension.ZERO_DIMENSION
         );
         var updatedSprite = moveUp.apply(sprite);
         assertNotEquals("Sprites should not be same", sprite, updatedSprite);
@@ -39,17 +39,17 @@ public class MoveBehaviorTest {
     @Test
     public void verifyStopRight() {
         var sprite = GameSprite.of(
-                SpriteType.PLAYER,
-                1L,
-                false,
-                Point3D.ZERO_POINT3D,
-                8L,
-                Direction.DOWN,
-                false,
-                null,
-                null,
-                AnimationState.STOPPED,
-                Dimension.ZERO_DIMENSION
+            SpriteType.PLAYER,
+            1L,
+            false,
+            Point3D.ZERO_POINT3D,
+            8L,
+            Direction.DOWN,
+            false,
+            null,
+            null,
+            AnimationState.STOPPED,
+            Dimension.ZERO_DIMENSION
         );
         var updatedSprite = moveRight.apply(sprite);
         assertNotEquals("Sprites should not be same", sprite, updatedSprite);
@@ -61,17 +61,17 @@ public class MoveBehaviorTest {
     @Test
     public void verifyStopDown() {
         var sprite = GameSprite.of(
-                SpriteType.PLAYER,
-                1L,
-                false,
-                Point3D.ZERO_POINT3D,
-                8L,
-                Direction.DOWN,
-                false,
-                null,
-                null,
-                AnimationState.STOPPED,
-                Dimension.ZERO_DIMENSION
+            SpriteType.PLAYER,
+            1L,
+            false,
+            Point3D.ZERO_POINT3D,
+            8L,
+            Direction.DOWN,
+            false,
+            null,
+            null,
+            AnimationState.STOPPED,
+            Dimension.ZERO_DIMENSION
         );
         var updatedSprite = moveDown.apply(sprite);
         assertNotEquals("Sprites should not be same", sprite, updatedSprite);
@@ -83,17 +83,17 @@ public class MoveBehaviorTest {
     @Test
     public void verifyStopLeft() {
         var sprite = GameSprite.of(
-                SpriteType.PLAYER,
-                1L,
-                false,
-                Point3D.ZERO_POINT3D,
-                8L,
-                Direction.DOWN,
-                false,
-                null,
-                null,
-                AnimationState.STOPPED,
-                Dimension.ZERO_DIMENSION
+            SpriteType.PLAYER,
+            1L,
+            false,
+            Point3D.ZERO_POINT3D,
+            8L,
+            Direction.DOWN,
+            false,
+            null,
+            null,
+            AnimationState.STOPPED,
+            Dimension.ZERO_DIMENSION
         );
         var updatedSprite = moveLeft.apply(sprite);
         assertNotEquals("Sprites should not be same", sprite, updatedSprite);

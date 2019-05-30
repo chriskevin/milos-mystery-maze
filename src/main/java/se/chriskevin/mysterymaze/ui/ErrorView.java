@@ -1,6 +1,5 @@
 package se.chriskevin.mysterymaze.ui;
 
-import io.vavr.Function1;
 import se.chriskevin.mysterymaze.geometry.Dimension;
 import se.chriskevin.mysterymaze.utils.AWT;
 
@@ -22,7 +21,7 @@ public final class ErrorView extends JPanel {
         setPreferredSize(AWT.Dimension.of(dimension));
     }
 
-    public static final ErrorView of(Dimension dimension, String message) {
+    public static ErrorView of(Dimension dimension, String message) {
         return new ErrorView(dimension, message);
     }
 

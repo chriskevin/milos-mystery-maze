@@ -17,6 +17,14 @@ public final class Dimension implements Serializable {
         return new Dimension(width, height);
     }
 
+    public static final Dimension half(Dimension dimension) {
+        return of(dimension.width / 2, dimension.height / 2);
+    }
+
+    public static final Dimension subtract(Dimension a, Dimension b) {
+        return of(a.width - b.width, a.height - b.height);
+    }
+
     public boolean equals(Object other) {
         if (other instanceof Dimension){
             return (((Dimension)other).height.equals(height) && ((Dimension)other).width.equals(width));

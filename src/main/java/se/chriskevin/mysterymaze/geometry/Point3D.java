@@ -2,8 +2,6 @@ package se.chriskevin.mysterymaze.geometry;
 
 import java.io.Serializable;
 
-import static se.chriskevin.mysterymaze.utils.Calculation.add;
-
 public final class Point3D implements Serializable {
 
     public final Long x;
@@ -19,6 +17,10 @@ public final class Point3D implements Serializable {
     }
 
     public static final Point3D of(Long x, Long y, Long z) { return new Point3D(x, y, z); }
+
+    public static final Point3D add(Point3D a, Point3D b) { return of(a.x + b.x, a.y + b.y, a.z + b.z); }
+
+    public static final Point3D subtract(Point3D a, Point3D b) { return of(a.x - b.x, a.y - b.y, a.z - b.z); }
 
     public static final Point3D moveX(Long x, Point3D point) {
         return of(x, point.y, point.z);
@@ -37,19 +39,19 @@ public final class Point3D implements Serializable {
     }
 
     public static final Point3D translateX(Long x, Point3D point) {
-        return of(add(point.x, x), point.y, point.z);
+        return of(point.x + x, point.y, point.z);
     }
 
     public static final Point3D translateY(Long y, Point3D point) {
-        return of(point.x, add(point.y, y), point.z);
+        return of(point.x, point.y + y, point.z);
     }
 
     public static final Point3D translateZ(Long z, Point3D point) {
-        return of(point.x, point.y, add(point.z, z));
+        return of(point.x, point.y, point.z + z);
     }
 
     public static final Point3D translate(Long x, Long y, Long z, Point3D point) {
-        return of(add(point.x, x), add(point.y, y), add(point.z, z));
+        return of(point.x + x, point.y + y, point.z + z);
     }
 
     public boolean equals(Object other) {

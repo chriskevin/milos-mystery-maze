@@ -33,6 +33,10 @@ public class AWT {
             return new java.awt.Rectangle(x, y, width, height);
         }
 
+        public static final java.awt.Rectangle of(long x, long y, long width, long height) {
+            return new java.awt.Rectangle((int) x, (int) y, (int) width, (int) height);
+        }
+
         public static final java.awt.Rectangle of(Point3D point3D, se.chriskevin.mysterymaze.geometry.Dimension dimension) {
             return new java.awt.Rectangle(
                 point3D.x.intValue(),
