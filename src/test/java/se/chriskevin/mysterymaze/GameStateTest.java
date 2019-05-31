@@ -1,4 +1,3 @@
 package se.chriskevin.mysterymaze;
 
-public class GameStateTest {
-}
+public class GameStateTest {}

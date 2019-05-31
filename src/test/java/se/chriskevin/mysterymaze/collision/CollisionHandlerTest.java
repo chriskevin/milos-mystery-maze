@@ -1,4 +1,3 @@
 package se.chriskevin.mysterymaze.collision;
 
-public class CollisionHandlerTest {
-}
+public class CollisionHandlerTest {}

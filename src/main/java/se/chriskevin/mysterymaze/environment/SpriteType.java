@@ -1,7 +1,7 @@
 package se.chriskevin.mysterymaze.environment;
 
 public enum SpriteType {
-    ENEMY,
-    PLAYER,
-    TILE
+  ENEMY,
+  PLAYER,
+  TILE
 }

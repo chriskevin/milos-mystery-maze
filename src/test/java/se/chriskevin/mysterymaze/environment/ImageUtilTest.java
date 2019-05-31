@@ -1,4 +1,3 @@
 package se.chriskevin.mysterymaze.environment;
 
-public class ImageUtilTest {
-}
+public class ImageUtilTest {}

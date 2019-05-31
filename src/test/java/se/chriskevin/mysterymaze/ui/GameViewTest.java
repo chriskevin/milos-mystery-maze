@@ -1,4 +1,3 @@
 package se.chriskevin.mysterymaze.ui;
 
-public class GameViewTest {
-}
+public class GameViewTest {}

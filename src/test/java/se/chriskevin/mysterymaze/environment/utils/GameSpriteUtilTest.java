@@ -1,4 +1,3 @@
 package se.chriskevin.mysterymaze.environment.utils;
 
-public class GameSpriteUtilTest {
-}
+public class GameSpriteUtilTest {}

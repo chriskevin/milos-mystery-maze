@@ -1,8 +1,10 @@
 plugins {
+    id "com.diffplug.gradle.spotless" version "3.23.0"
     id "net.ltgt.apt" version "0.15"
 }
 
-apply plugin:'application'
+apply plugin: 'application'
+apply plugin: "com.diffplug.gradle.spotless"
 apply plugin: "net.ltgt.apt"
 apply plugin: "net.ltgt.apt-idea"
 apply plugin: 'idea'
@@ -34,5 +36,12 @@ jacocoTestReport {
         xml.enabled false
         csv.enabled false
         html.destination file("${buildDir}/jacocoHtml")
+    }
+}
+
+spotless {
+    java {
+        googleJavaFormat()
+        //googleJavaFormat('1.1').aosp()
     }
 }
