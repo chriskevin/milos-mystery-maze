@@ -102,11 +102,11 @@ public final class GameView extends JPanel {
             });
     }
 
-    public static final GameView of(Dimension dimension, GameEnvironment environment) {
+    public static GameView of(Dimension dimension, GameEnvironment environment) {
         return new GameView(dimension, environment);
     }
 
-    public static final void renderSprite(Graphics g, GameView gameView, Point3D offsetP, GameSprite sprite) {
+    public static void renderSprite(Graphics g, GameView gameView, Point3D offsetP, GameSprite sprite) {
         var g2d = (Graphics2D) g;
 
         if (sprite.colliding) {
@@ -115,7 +115,7 @@ public final class GameView extends JPanel {
         g2d.drawImage(getImage(imageMapKey(sprite.animationState, sprite.direction), sprite.images), Calculation.add(sprite.position.x, offsetP.x).intValue(), Calculation.add(sprite.position.y, offsetP.y).intValue(), gameView);
     }
 
-    public static final void drawCollisionZone(Graphics g, Rectangle bounds) {
+    public static void drawCollisionZone(Graphics g, Rectangle bounds) {
         var myColour = new Color(255, 0, 0, 128);
         g.setColor(myColour);  
         g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
@@ -154,22 +154,18 @@ public final class GameView extends JPanel {
         var player = getPlayer(environment.sprites);
 
         var coordsMsg =
-            new StringBuilder()
-                .append(" X: ")
-                .append(player.position.x)
-                .append(" Y: ")
-                .append(player.position.y)
-                .append(" Colliding: ")
-                .append(player.colliding)
-                .toString();
+                " X: " +
+                player.position.x +
+                " Y: " +
+                player.position.y +
+                " Colliding: " +
+                player.colliding;
 
         var debugMsg =
-            new StringBuilder()
-                .append(ingameMsg)
-                .append(levelMsg)
-                .append(enemyMsg)
-                .append(coordsMsg)
-                .toString();
+                ingameMsg +
+                levelMsg +
+                enemyMsg +
+                coordsMsg;
 
         g.drawString(debugMsg, 32, 32);
         drawCli(g);

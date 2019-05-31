@@ -21,7 +21,7 @@ public class CLI {
         return this.enabled;
     }
 
-    public void isEnabled(boolean enabled) {
+    public void isEnabled(final boolean enabled) {
         this.enabled = enabled;
     }
 
@@ -29,7 +29,7 @@ public class CLI {
         return this.currentCommand;
     }
 
-    public void setCurrentCommand(String currentCommand) {
+    public void setCurrentCommand(final String currentCommand) {
         this.currentCommand = currentCommand;
     }
 
@@ -37,7 +37,7 @@ public class CLI {
         return this.history;
     }
 
-    public void setActions(Map<String, CliAction> actions) {
+    public void setActions(final Map<String, CliAction> actions) {
         this.actions = actions;
     }
 
@@ -48,7 +48,7 @@ public class CLI {
     public String run() {
         if (actions != null && actions.size() > 0) {
             history.add(currentCommand);
-            var msg = actions.get(currentCommand).execute();
+            final var msg = actions.get(currentCommand).execute();
             currentCommand = "";
             return msg;
         } else {

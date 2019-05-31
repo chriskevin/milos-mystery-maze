@@ -12,12 +12,10 @@ package se.chriskevin.mysterymaze.sound;
 
 import java.io.File;
 import java.io.IOException;
-import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -39,7 +37,7 @@ public class SoundPlayer extends Thread {
     private boolean loop = false;
     private Position curPosition;
     private final int EXTERNAL_BUFFER_SIZE = 524288; // 128Kb
-    SourceDataLine channel = null;
+    private SourceDataLine channel = null;
 
 
     /**
@@ -48,13 +46,13 @@ public class SoundPlayer extends Thread {
      */
     public enum Position {
         LEFT, RIGHT, NORMAL
-    };
+    }
 
     /**
      * This constructor takes a url and playes the sound located at that url
      * @param wavfile
      */
-    public SoundPlayer(String wavfile) {
+    public SoundPlayer(final String wavfile) {
         filename = wavfile;
         curPosition = Position.NORMAL;
     }
@@ -65,7 +63,7 @@ public class SoundPlayer extends Thread {
      * @param wavfile
      * @param p
      */
-    public SoundPlayer(String wavfile, Position p) {
+    public SoundPlayer(final String wavfile, final Position p) {
         curPosition = p;
     }
 
@@ -76,7 +74,7 @@ public class SoundPlayer extends Thread {
      * @param wavfile
      * @param loop
      */
-    public SoundPlayer(String wavfile, boolean loop) {
+    public SoundPlayer(final String wavfile, final boolean loop) {
         this.loop = loop;
         filename = wavfile;
         curPosition = Position.NORMAL;
@@ -108,7 +106,7 @@ public class SoundPlayer extends Thread {
      * and writes it to the soundcard via a bit stream.
      */
     public void run() {
-        var soundFile = new File(filename);
+        final var soundFile = new File(filename);
 
         if (!soundFile.exists()) {
             System.err.println("Wave file not found: " + filename);
@@ -118,26 +116,22 @@ public class SoundPlayer extends Thread {
         AudioInputStream audioInputStream = null;
         try {
             audioInputStream = AudioSystem.getAudioInputStream(soundFile);
-        } catch (UnsupportedAudioFileException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+        } catch (final UnsupportedAudioFileException | IOException e) {
             throw new RuntimeException(e);
         }
 
-        var format = audioInputStream.getFormat();
-        var info = new DataLine.Info(SourceDataLine.class, format);
+        final var format = audioInputStream.getFormat();
+        final var info = new DataLine.Info(SourceDataLine.class, format);
 
         try {
             channel = (SourceDataLine) AudioSystem.getLine(info);
             channel.open(format);
-        } catch (LineUnavailableException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
 
         if (channel.isControlSupported(FloatControl.Type.PAN)) {
-            var pan = (FloatControl) channel.getControl(FloatControl.Type.PAN);
+            final var pan = (FloatControl) channel.getControl(FloatControl.Type.PAN);
             if (curPosition == Position.RIGHT) {
                 pan.setValue(1.0f);
             } else if (curPosition == Position.LEFT) {
@@ -156,7 +150,7 @@ public class SoundPlayer extends Thread {
                     channel.write(abData, 0, nBytesRead);
                 }
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         } finally {
             if (loop == true) {

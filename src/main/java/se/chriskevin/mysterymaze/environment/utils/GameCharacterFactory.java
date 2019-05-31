@@ -6,7 +6,6 @@ import io.vavr.control.Option;
 import se.chriskevin.mysterymaze.animation.AnimationState;
 import se.chriskevin.mysterymaze.animation.Direction;
 import se.chriskevin.mysterymaze.behavior.Behavior;
-import se.chriskevin.mysterymaze.behavior.MoveBehavior;
 import se.chriskevin.mysterymaze.environment.GameSprite;
 import se.chriskevin.mysterymaze.environment.SpriteType;
 import se.chriskevin.mysterymaze.geometry.Point3D;
@@ -18,7 +17,7 @@ import static se.chriskevin.mysterymaze.geometry.Point3D.translateY;
 
 public final class GameCharacterFactory {
 
-    public static Option<GameSprite> createEnemy(Long enemyNo, Point3D currentLocation, Long scale) {
+    public static Option<GameSprite> createEnemy(final Long enemyNo, final Point3D currentLocation, final Long scale) {
         switch (enemyNo.intValue()) {
             case 1:
                 return Option.of(createBat(scale, currentLocation));
@@ -31,7 +30,7 @@ public final class GameCharacterFactory {
         return Option.none();
     }
 
-    public static GameSprite createHero(Long scale, Point3D location) {
+    public static GameSprite createHero(final Long scale, final Point3D location) {
         final Map<String, String> imageMap = HashMap.of(
             "STOPPED_DOWN", "/images/milo/STOPPED_DOWN.gif",
             "STOPPED_LEFT", "/images/milo/STOPPED_LEFT.gif",
@@ -43,9 +42,9 @@ public final class GameCharacterFactory {
             "WALKING_UP", "/images/milo/WALKING_UP.gif"
         );
 
-        var animationState = AnimationState.STOPPED;
-        var direction = Direction.DOWN;
-        var images = convertToImages(imageMap)
+        final var animationState = AnimationState.STOPPED;
+        final var direction = Direction.DOWN;
+        final var images = convertToImages(imageMap)
                 .filterValues(Option::isDefined)
                 .mapValues(x -> resize(scale, x.get()));
 
@@ -64,8 +63,8 @@ public final class GameCharacterFactory {
         );
     }
 
-    public static GameSprite createBat(Long scale, Point3D location) {
-        var imageMap = HashMap.of(
+    public static GameSprite createBat(final Long scale, final Point3D location) {
+        final var imageMap = HashMap.of(
             "STOPPED_DOWN", "/images/bat/WALKING_DOWN.gif",
             "STOPPED_LEFT", "/images/bat/WALKING_LEFT.gif",
             "STOPPED_RIGHT", "/images/bat/WALKING_RIGHT.gif",
@@ -76,9 +75,9 @@ public final class GameCharacterFactory {
             "WALKING_UP", "/images/bat/WALKING_UP.gif"
         );
 
-        var animationState = AnimationState.WALKING;
-        var direction = Direction.DOWN;
-        var images = convertToImages(imageMap)
+        final var animationState = AnimationState.WALKING;
+        final var direction = Direction.DOWN;
+        final var images = convertToImages(imageMap)
                 .filterValues(Option::isDefined)
                 .mapValues(x -> resize(scale, x.get()));
 
@@ -97,8 +96,8 @@ public final class GameCharacterFactory {
         );
     }
 
-    public static GameSprite createRat(Long scale, Point3D location) {
-        var imageMap = HashMap.of(
+    public static GameSprite createRat(final Long scale, final Point3D location) {
+        final var imageMap = HashMap.of(
             "STOPPED_DOWN", "/images/rat/STOPPED_LEFT.gif",
             "STOPPED_LEFT", "/images/rat/STOPPED_LEFT.gif",
             "STOPPED_RIGHT", "/images/rat/STOPPED_RIGHT.gif",
@@ -109,9 +108,9 @@ public final class GameCharacterFactory {
             "WALKING_UP", "/images/rat/WALKING_RIGHT.gif"
         );
 
-        var animationState = AnimationState.STOPPED;
-        var direction = Direction.DOWN;
-        var images = convertToImages(imageMap)
+        final var animationState = AnimationState.STOPPED;
+        final var direction = Direction.DOWN;
+        final var images = convertToImages(imageMap)
                 .filterValues(Option::isDefined)
                 .mapValues(x -> resize(scale, x.get()));
 
@@ -130,14 +129,14 @@ public final class GameCharacterFactory {
         );
     }
 
-    public static GameSprite createTile(Long scale, Point3D currentLocation, Boolean blocking, String imageFilename) {
-        var imageMap = HashMap.of(
+    public static GameSprite createTile(final Long scale, final Point3D currentLocation, final Boolean blocking, final String imageFilename) {
+        final var imageMap = HashMap.of(
             "STOPPED_DOWN", imageFilename
         );
 
-        var animationState = AnimationState.STOPPED;
-        var direction = Direction.DOWN;
-        var images = convertToImages(imageMap)
+        final var animationState = AnimationState.STOPPED;
+        final var direction = Direction.DOWN;
+        final var images = convertToImages(imageMap)
                 .filterValues(Option::isDefined)
                 .mapValues(Option::get)
                 .mapValues(x -> resize(scale, x));
@@ -157,15 +156,15 @@ public final class GameCharacterFactory {
         );
     }
 
-    public static GameSprite createZombie(Long scale, Point3D location) {
-        var imageMap = HashMap.of(
+    public static GameSprite createZombie(final Long scale, final Point3D location) {
+        final var imageMap = HashMap.of(
             "STOPPED_DOWN", "/images/zombie/STOPPED_DOWN.gif",
             "STOPPED_UP", "/images/zombie/STOPPED_UP.gif"
         );
 
-        var animationState = AnimationState.STOPPED;
-        var direction = Direction.DOWN;
-        var images = convertToImages(imageMap)
+        final var animationState = AnimationState.STOPPED;
+        final var direction = Direction.DOWN;
+        final var images = convertToImages(imageMap)
                 .filterValues(Option::isDefined)
                 .mapValues(x -> resize(scale, x.get()));
 

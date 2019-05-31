@@ -28,17 +28,17 @@ public class GameSprite {
     public final SpriteType type;
 
     private GameSprite(
-        SpriteType type,
-        Long scale,
-        Boolean blocking,
-        Point3D position,
-        Long speed,
-        Direction direction,
-        Boolean colliding,
-        Behavior behavior,
-        Map<String, Image> images,
-        AnimationState animationState,
-        Dimension size
+        final SpriteType type,
+        final Long scale,
+        final Boolean blocking,
+        final Point3D position,
+        final Long speed,
+        final Direction direction,
+        final Boolean colliding,
+        final Behavior behavior,
+        final Map<String, Image> images,
+        final AnimationState animationState,
+        final Dimension size
     ) {
         this.type = type;
         this.position = position;
@@ -53,18 +53,18 @@ public class GameSprite {
         this.size = size;
     }
 
-    public static final GameSprite of(
-        SpriteType type,
-        Long scale,
-        Boolean blocking,
-        Point3D position,
-        Long speed,
-        Direction direction,
-        Boolean colliding,
-        Behavior behavior,
-        Map<String, Image> images,
-        AnimationState animationState,
-        Dimension size
+    public static GameSprite of(
+        final SpriteType type,
+        final Long scale,
+        final Boolean blocking,
+        final Point3D position,
+        final Long speed,
+        final Direction direction,
+        final Boolean colliding,
+        final Behavior behavior,
+        final Map<String, Image> images,
+        final AnimationState animationState,
+        final Dimension size
     ) {
         return new GameSprite(type, scale, blocking, position, speed, direction, colliding, behavior, images, animationState, size);
     }

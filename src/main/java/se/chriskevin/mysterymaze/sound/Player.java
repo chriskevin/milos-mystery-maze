@@ -6,9 +6,9 @@ public class Player {
      * soundFileLocation stores the sounds position on the harddrive.
      */
     public static String[] soundFileLocation = new String[17];
-    SoundPlayer channel1;
-    SoundPlayer channel2;
-    SoundPlayer channel3;
+    private SoundPlayer channel1;
+    private SoundPlayer channel2;
+    private SoundPlayer channel3;
 
 
     /**

@@ -11,7 +11,7 @@ public class ImageSequence {
 
     private List<Image> sequence;
 
-    public ImageSequence(List<Image> sequence) {
+    public ImageSequence(final List<Image> sequence) {
         this.sequence = sequence;
         this.index = 0;
     }
@@ -43,7 +43,7 @@ public class ImageSequence {
         return sequence.get(index);
     }
 
-    public void setSequence(List<Image> sequence) {
+    public void setSequence(final List<Image> sequence) {
         this.sequence = sequence;
     }
 }

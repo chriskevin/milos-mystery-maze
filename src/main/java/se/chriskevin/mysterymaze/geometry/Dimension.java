@@ -8,16 +8,16 @@ public final class Dimension implements Serializable {
 
     public static final Dimension ZERO_DIMENSION = of(0L, 0L);
 
-    private Dimension(Long w, Long h) {
+    private Dimension(final Long w, final Long h) {
         this.height = h;
         this.width = w;
     }
 
-    public static final Dimension of(Long width, Long height) {
+    public static Dimension of(final Long width, final Long height) {
         return new Dimension(width, height);
     }
 
-    public boolean equals(Object other) {
+    public boolean equals(final Object other) {
         if (other instanceof Dimension){
             return (((Dimension)other).height.equals(height) && ((Dimension)other).width.equals(width));
         }
@@ -25,7 +25,7 @@ public final class Dimension implements Serializable {
     }
 
     public int hashCode() {
-        var var1 = width.intValue() + height.intValue();
+        final var var1 = width.intValue() + height.intValue();
         return var1 * (var1 + 1) / 2 + width.intValue();
     }
 

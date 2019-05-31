@@ -20,7 +20,7 @@ public final class Game extends JFrame {
         initUI();
     }
 
-    public static final Game of() {
+    public static Game of() {
         return new Game();
     }
 
@@ -29,7 +29,7 @@ public final class Game extends JFrame {
         setResizable(true);
         setSize(1024, 768);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setUndecorated(true);
+        setUndecorated(false);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -42,12 +42,12 @@ public final class Game extends JFrame {
 
     private Function1<GameEnvironment, GameEnvironment> viewGame =
         (environment) -> {
-            var view = GameView.of(
+            final var view = GameView.of(
                 AWT.Dimension.of(this.getSize()),
                 environment
             );
 
-            var engine = GameEngine.of(view, environment);
+            final var engine = GameEngine.of(view, environment);
             view.setEngine(engine);
 
             setContentPane(view);
@@ -57,7 +57,7 @@ public final class Game extends JFrame {
 
     private Runnable viewError =
         () -> {
-            var view = ErrorView.of(
+            final var view = ErrorView.of(
                 AWT.Dimension.of(this.getSize()),
                 "Unable to start game."
             );
@@ -76,9 +76,7 @@ public final class Game extends JFrame {
         getContentPane().setCursor(customCursor.apply(blankCursorImage.apply()));
     }
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            Game.of().setVisible(true);
-        });
+    public static void main(final String[] args) {
+        EventQueue.invokeLater(() -> Game.of().setVisible(true));
     }
 }

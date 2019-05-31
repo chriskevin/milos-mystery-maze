@@ -1,6 +1,5 @@
 package se.chriskevin.mysterymaze;
 
-import io.vavr.*;
 import io.vavr.collection.List;
 import io.vavr.control.Try;
 
@@ -25,7 +24,7 @@ public final class BoardGenerator {
         .getOrElse(List::empty);
     }
 
-    public static final String createTileImagePath(Character type, Character typeId) {
-        return new StringBuilder().append(TILE_PATH).append(type).append(typeId).append(".gif").toString();
+    public static String createTileImagePath(Character type, Character typeId) {
+        return TILE_PATH + type + typeId + ".gif";
     }
 }

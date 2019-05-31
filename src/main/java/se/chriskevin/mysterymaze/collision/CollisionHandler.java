@@ -11,15 +11,15 @@ import static se.chriskevin.mysterymaze.environment.utils.GameSpriteUtil.getPlay
 
 public final class CollisionHandler {
 
-    public static final Boolean isColliding(GameSprite a, GameSprite b) {
+    public static Boolean isColliding(final GameSprite a, final GameSprite b) {
         return a.getBounds().intersects(b.getBounds());
     }
 
-    public static final GameSprite checkAndHandleCollision(GameSprite a, GameSprite b) {
+    public static GameSprite checkAndHandleCollision(final GameSprite a, final GameSprite b) {
         return (!a.equals(b) && isColliding(a, b)) ? bounceBack.apply(a) : a;
     }
 
-    public static final void setCollisions(List<GameSprite> sprites) {
+    public static void setCollisions(List<GameSprite> sprites) {
         getByType(SpriteType.TILE, sprites)
             .filter(x -> x.blocking)
             .forEach(tile -> {
@@ -36,7 +36,7 @@ public final class CollisionHandler {
         });
     }
 
-    public static final Boolean checkCollision(GameSprite a, GameSprite b) {
+    public static Boolean checkCollision(final GameSprite a, final GameSprite b) {
         while (!a.equals(b) && isColliding(a, b)) {
             bounceBack.apply(a);
             a.colliding = isColliding(a, b);

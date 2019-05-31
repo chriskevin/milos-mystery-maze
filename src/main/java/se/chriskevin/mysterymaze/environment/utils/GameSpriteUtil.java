@@ -6,11 +6,11 @@ import se.chriskevin.mysterymaze.environment.SpriteType;
 
 public class GameSpriteUtil {
 
-    public static final List<GameSprite> getByType(SpriteType type, List<GameSprite> sprites) {
+    public static List<GameSprite> getByType(final SpriteType type, final List<GameSprite> sprites) {
         return sprites.filter(x -> type.equals(x.type));
     }
 
-    public static final GameSprite getPlayer(List<GameSprite> sprites) {
+    public static GameSprite getPlayer(final List<GameSprite> sprites) {
         return getByType(SpriteType.PLAYER, sprites).get(0);
     }
 }

@@ -1,6 +1,5 @@
 package se.chriskevin.mysterymaze.environment;
 
-import io.vavr.Function2;
 import io.vavr.Tuple2;
 import io.vavr.collection.Map;
 import io.vavr.control.Option;
@@ -18,23 +17,23 @@ import static se.chriskevin.mysterymaze.geometry.Dimension.ZERO_DIMENSION;
 
 public final class ImageUtil {
 
-    public static final String imageMapKey(AnimationState animationState, Direction direction) {
+    public static String imageMapKey(final AnimationState animationState, final Direction direction) {
         return (animationState + "_" + direction);
     }
 
-    public static final Image getImage(String key, Map<String, Image> images) {
+    public static Image getImage(final String key, final Map<String, Image> images) {
         return images.get(key).getOrElse(/*images.get("DEFAULT").get()*/ new BufferedImage(1, 1, 1));
     }
 
-    public static final Long multiplyImageWidth(Long factor, Image image) {
+    public static Long multiplyImageWidth(final Long factor, final Image image) {
         return factor * image.getWidth(null);
     }
 
-    public static final Long multiplyImageHeight(Long factor, Image image) {
+    public static Long multiplyImageHeight(final Long factor, final Image image) {
         return factor * image.getHeight(null);
     }
 
-    public static final Image resize(Long factor, Image image) {
+    public static Image resize(final Long factor, final Image image) {
         return image.getScaledInstance(
                 multiplyImageWidth(factor, image).intValue(),
                 multiplyImageHeight(factor, image).intValue(),
@@ -42,25 +41,25 @@ public final class ImageUtil {
         );
     }
 
-    public static final Option<BufferedImage> loadImage(String imageName) {
+    public static Option<BufferedImage> loadImage(final String imageName) {
         return Try.of(() -> ImageIO.read(new File(ImageUtil.class.getResource(imageName).toURI())))
                 .map(Option::of)
                 .getOrElse(Option::none);
     }
 
 
-    public static final Map<String, Option<Image>> convertToImages(Map<String, String> imageMap) {
+    public static Map<String, Option<Image>> convertToImages(final Map<String, String> imageMap) {
         return imageMap.map((k, v) -> new Tuple2(k, loadImage(v)));
     }
 
-    public static final Dimension imageDimension(Image image) {
+    public static Dimension imageDimension(final Image image) {
         return Dimension.of(
-            Long.valueOf(image.getWidth(null)),
-            Long.valueOf(image.getHeight(null))
+                (long) image.getWidth(null),
+                (long) image.getHeight(null)
         );
     }
 
-    public static final Dimension getSizeFromImageDimensions(AnimationState animationState, Direction direction, Map<String, Image> images) {
+    public static Dimension getSizeFromImageDimensions(final AnimationState animationState, final Direction direction, final Map<String, Image> images) {
         return Option.of(getImage(imageMapKey(animationState, direction), images))
                 .map(ImageUtil::imageDimension)
                 .getOrElse(ZERO_DIMENSION);

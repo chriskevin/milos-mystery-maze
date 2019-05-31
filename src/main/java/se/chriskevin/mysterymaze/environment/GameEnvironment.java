@@ -1,8 +1,6 @@
 package se.chriskevin.mysterymaze.environment;
 
-import io.vavr.Function0;
 import io.vavr.Function1;
-import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.control.Option;
 import se.chriskevin.mysterymaze.geometry.Dimension;
@@ -26,16 +24,16 @@ public class GameEnvironment {
     public final Dimension size;
     public final List<GameSprite> sprites;
 
-    private GameEnvironment(Dimension size, List<GameSprite> sprites) {
+    private GameEnvironment(final Dimension size, final List<GameSprite> sprites) {
         this.size = size;
         this.sprites = sprites;
     }
 
-    public static final GameEnvironment of(Dimension size, List<GameSprite> sprites) {
+    public static GameEnvironment of(final Dimension size, final List<GameSprite> sprites) {
         return new GameEnvironment(size, sprites);
     }
 
-    public static List<GameSprite> createSprite(Character type, Character typeId, Long scale, Point3D currentLocation, List<GameSprite> sprites) {
+    public static List<GameSprite> createSprite(final Character type, final Character typeId, final Long scale, final Point3D currentLocation, final List<GameSprite> sprites) {
         /*var sps = HashMap.of(
             "efwhm", (Function0<GameSprite>) () -> createTile(scale, currentLocation, false, createTileImagePath(type, typeId)),
             "h", (Function0<GameSprite>) () -> createHero(scale, Point3D.of(currentLocation.x, subtract(currentLocation.y, 14L), 0L))
@@ -65,7 +63,7 @@ public class GameEnvironment {
             case 'm':
                 sprites
                         .push(createTile(scale, currentLocation, false, createTileImagePath(type, typeId)));
-                var sprite = createEnemy(Long.valueOf(typeId - '0'), currentLocation, scale);
+                var sprite = createEnemy((long) (typeId - '0'), currentLocation, scale);
                 if (sprite.isDefined()) {
                     sprites.push(sprite.get());
                 }
@@ -79,7 +77,7 @@ public class GameEnvironment {
 
     public static final Function1<List<String>, List<GameSprite>> createLevel =
             (levelData) -> {
-                var rowNo = new AtomicInteger(0);
+                final var rowNo = new AtomicInteger(0);
                 var currentLocation = ZERO_POINT3D;
                 List<GameSprite> sprites = List.empty();
 
@@ -97,21 +95,21 @@ public class GameEnvironment {
                         sprites = createSprite(type, typeId, SCALE, currentLocation, sprites);
                     }
 
-                    currentLocation = move(0L, (TILE_WIDTH * SCALE) * Long.valueOf(rowNo.get()), 0L, currentLocation);
+                    currentLocation = move(0L, (TILE_WIDTH * SCALE) * (long) rowNo.get(), 0L, currentLocation);
 
                 }
 
                 return sprites;
             };
 
-    public static Option<GameEnvironment> createEnvironment(List<String> levelData) {
+    public static Option<GameEnvironment> createEnvironment(final List<String> levelData) {
         return levelData.isEmpty() ?
             Option.none() :
             Option.of(
                 GameEnvironment.of(
                     Dimension.of(
-                    multiply(Long.valueOf(levelData.get(0).split("|").length), TILE_WIDTH) * SCALE,
-                    multiply(Long.valueOf(levelData.size()), TILE_WIDTH) * SCALE
+                    multiply((long) levelData.get(0).split("|").length, TILE_WIDTH) * SCALE,
+                    multiply((long) levelData.size(), TILE_WIDTH) * SCALE
                     ),
                     createLevel.apply(levelData)
                 )

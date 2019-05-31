@@ -21,9 +21,9 @@ public class GameEngine implements ActionListener {
     private final Timer timer;
 
     public static final Function2<GameView, GameEnvironment, GameEngine> createEngine =
-        (view, environment) -> of(view, environment);
+            GameEngine::of;
 
-    public GameEngine(GameView view, GameEnvironment environment) {
+    public GameEngine(final GameView view, final GameEnvironment environment) {
         this.view = view;
         this.environment = environment;
         this.blockingSprites = environment.sprites.filter(sprite -> sprite.blocking);
@@ -33,12 +33,12 @@ public class GameEngine implements ActionListener {
         timer.start();
     }
 
-    public static final GameEngine of(GameView view, GameEnvironment environment) {
+    public static GameEngine of(final GameView view, final GameEnvironment environment) {
         return new GameEngine(view, environment);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         if (!paused) {
             //environment.sprites.forEach(GameEngine::act);
             //CollisionHandler.setCollisions.apply(environment.sprites);
@@ -47,7 +47,7 @@ public class GameEngine implements ActionListener {
         view.update();
     }
 
-    public static void act(GameSprite sprite) {
+    public static void act(final GameSprite sprite) {
         sprite.behavior.forEach((b) -> {/* b.apply(sprite) */});
     }
 
@@ -55,7 +55,7 @@ public class GameEngine implements ActionListener {
         return paused;
     }
 
-    public void setEnvironment(GameEnvironment environment) {
+    public void setEnvironment(final GameEnvironment environment) {
         this.environment = environment;
         this.blockingSprites = environment.sprites.filter(sprite -> sprite.blocking);
     }

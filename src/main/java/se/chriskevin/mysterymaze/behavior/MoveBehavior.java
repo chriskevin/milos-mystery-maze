@@ -16,7 +16,7 @@ public class MoveBehavior {
                 sprite.type,
                 sprite.scale,
                 sprite.blocking,
-                translate(Long.valueOf(x), Long.valueOf(y),0L, sprite.position),
+                translate(x, y,0L, sprite.position),
                 sprite.speed,
                 direction,
                 sprite.colliding,
@@ -27,8 +27,8 @@ public class MoveBehavior {
             );
 
     public static final Function1<GameSprite, GameSprite> bounceBack = (sprite) -> {
-        var dl = sprite.position;
-        var halfSpeed = half(sprite.speed);
+        final var dl = sprite.position;
+        final var halfSpeed = half(sprite.speed);
 
         /*return Option.of(ZERO_POINT3D)
             .map(transformWhen(equals(Direction.DOWN, sprite.direction), translateY(subtract(dl.y, halfSpeed))))

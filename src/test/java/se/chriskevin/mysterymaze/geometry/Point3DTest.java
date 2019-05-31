@@ -18,9 +18,8 @@ public class Point3DTest {
 
     @Test
     public void verifyNotEquals() {
-        final Point3D a = ZERO_POINT3D;
         final Point3D b = Point3D.of(2L, 2L, 2L);
-        assertFalse(a.equals(b));
+        assertFalse(ZERO_POINT3D.equals(b));
     }
 
     @Test

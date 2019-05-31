@@ -1,6 +1,5 @@
 package se.chriskevin.mysterymaze.ui;
 
-import io.vavr.Function1;
 import se.chriskevin.mysterymaze.geometry.Dimension;
 import se.chriskevin.mysterymaze.utils.AWT;
 
@@ -13,7 +12,7 @@ public final class ErrorView extends JPanel {
 
     private String message;
 
-    private ErrorView(Dimension dimension, String message) {
+    private ErrorView(final Dimension dimension, final String message) {
         this.dimension = dimension;
         this.message = message;
 
@@ -22,18 +21,18 @@ public final class ErrorView extends JPanel {
         setPreferredSize(AWT.Dimension.of(dimension));
     }
 
-    public static final ErrorView of(Dimension dimension, String message) {
+    public static ErrorView of(final Dimension dimension, final String message) {
         return new ErrorView(dimension, message);
     }
 
     @Override
-    public void paintComponent(Graphics g) {
+    public void paintComponent(final Graphics g) {
         super.paintComponent(g);
         drawError(g, message);
         Toolkit.getDefaultToolkit().sync();
     }
 
-    private void drawError(Graphics g, String message) {
+    private void drawError(final Graphics g, final String message) {
         g.setColor(new Color(255, 243, 205));
         g.fillRect(32, 32, 960, 100);
 
@@ -42,5 +41,5 @@ public final class ErrorView extends JPanel {
         g.drawString(message, 64, 64);
 
         g.dispose();
-    };
+    }
 }
