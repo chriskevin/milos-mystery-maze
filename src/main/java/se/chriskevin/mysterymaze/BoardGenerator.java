@@ -10,13 +10,13 @@ public final class BoardGenerator {
   static final String IMAGE_PATH = "/images/";
   static final String TILE_PATH = IMAGE_PATH + "/tiles/";
 
-  public static List<String> parseLevelFile(String filename) {
-    var resourceAsStream = BoardGenerator.class.getResourceAsStream(filename);
-    var sc = new Scanner(resourceAsStream);
+  public static List<String> parseLevelFile(final String filename) {
+    final var resourceAsStream = BoardGenerator.class.getResourceAsStream(filename);
+    final var sc = new Scanner(resourceAsStream);
 
     return Try.of(
             () -> {
-              var mapData = new ArrayList<String>();
+              final var mapData = new ArrayList<String>();
               sc.forEachRemaining(mapData::add);
               return List.ofAll(mapData);
             })
@@ -24,7 +24,7 @@ public final class BoardGenerator {
         .getOrElse(List::empty);
   }
 
-  public static String createTileImagePath(Character type, Character typeId) {
+  public static String createTileImagePath(final Character type, final Character typeId) {
     return TILE_PATH + type + typeId + ".gif";
   }
 }

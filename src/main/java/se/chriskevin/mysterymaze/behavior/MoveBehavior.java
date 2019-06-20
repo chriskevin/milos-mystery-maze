@@ -3,8 +3,8 @@ package se.chriskevin.mysterymaze.behavior;
 import static se.chriskevin.mysterymaze.geometry.Point3D.translate;
 import static se.chriskevin.mysterymaze.utils.Calculation.half;
 
-import io.vavr.Function1;
 import io.vavr.Function5;
+import java.util.function.Function;
 import se.chriskevin.mysterymaze.animation.AnimationState;
 import se.chriskevin.mysterymaze.animation.Direction;
 import se.chriskevin.mysterymaze.environment.GameSprite;
@@ -26,7 +26,7 @@ public class MoveBehavior {
               AnimationState.WALKING,
               sprite.size);
 
-  public static final Function1<GameSprite, GameSprite> bounceBack =
+  public static final Function<GameSprite, GameSprite> bounceBack =
       (sprite) -> {
         final var dl = sprite.position;
         final var halfSpeed = half(sprite.speed);
@@ -42,19 +42,19 @@ public class MoveBehavior {
         return sprite;
       };
 
-  public static final Function1<GameSprite, GameSprite> moveDown =
+  public static final Function<GameSprite, GameSprite> moveDown =
       (sprite) -> move.apply(0L, sprite.speed, Direction.DOWN, Behavior.STOP_DOWN, sprite);
 
-  public static final Function1<GameSprite, GameSprite> moveLeft =
+  public static final Function<GameSprite, GameSprite> moveLeft =
       (sprite) -> move.apply(-sprite.speed, 0L, Direction.LEFT, Behavior.STOP_LEFT, sprite);
 
-  public static final Function1<GameSprite, GameSprite> moveRight =
+  public static final Function<GameSprite, GameSprite> moveRight =
       (sprite) -> move.apply(sprite.speed, 0L, Direction.RIGHT, Behavior.STOP_RIGHT, sprite);
 
-  public static final Function1<GameSprite, GameSprite> moveUp =
+  public static final Function<GameSprite, GameSprite> moveUp =
       (sprite) -> move.apply(0L, -sprite.speed, Direction.UP, Behavior.STOP_UP, sprite);
 
-  /* public static final Function1<GameSprite, GameSprite> moveHorizontal = (sprite) -> {
+  /* public static final Function<GameSprite, GameSprite> moveHorizontal = (sprite) -> {
       if (Direction.DOWN.equals(sprite.direction)) {
           return MOVE_DOWN.execute(sprite);
       } else if (Direction.UP.equals(sprite.direction)) {
